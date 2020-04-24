@@ -2,6 +2,7 @@ const express = require('express');
 const app = express()
 const http = require("http").createServer(app)
 
+app.use(express.static("public"));
 
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/views/index.html');
@@ -115,7 +116,7 @@ function checkNeedCall(userID) {
         let newCallID = makeCallID()
         cUser.callID = newCallID
         io.to(cUser.id).emit("start call", nearCall)
-        
+
         for ( let otherUserID of nearUsers ) {
           users[otherUserID].callID = newCallID
           io.to(otherUserID).emit("start call", newCallID)

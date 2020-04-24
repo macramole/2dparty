@@ -1,0 +1,27 @@
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+}
+.pj {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    border: 3px solid black;
+    border-radius: 8px;
+    left: 10px;
+    top: 0;
+    text-align: center;
+    /* background-color: gray; */
+}
+main {
+    display: flex;
+}
+#room {
+    border-right: 1px solid black;
+    width: 80%;
+    height: 100%;
+}
+#meet {
+    width: 20%;
+}
