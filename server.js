@@ -115,7 +115,7 @@ function checkNeedCall(userID) {
       } else {
         let newCallID = makeCallID()
         cUser.callID = newCallID
-        io.to(cUser.id).emit("start call", nearCall)
+        io.to(cUser.id).emit("start call", newCallID)
 
         for ( let otherUserID of nearUsers ) {
           users[otherUserID].callID = newCallID
