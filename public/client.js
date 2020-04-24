@@ -116,9 +116,12 @@ socket.on("start call", (callID) => {
         width: window.innerWidth * 0.2,
         height: window.innerHeight,
         parentNode: $meet,
+        userInfo : {
+            displayName : nombre
+        },
         interfaceConfigOverwrite : {
             // filmStripOnly: true,
-            DEFAULT_REMOTE_DISPLAY_NAME: nombre,
+            // DEFAULT_REMOTE_DISPLAY_NAME: nombre,
             // TOOLBAR_BUTTONS: ["camera", "chat", "tileview", "filmstrip"]
         }
     };
