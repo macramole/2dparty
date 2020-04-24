@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Party</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            overflow: hidden;
+        }
+        .pj {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            border: 3px solid black;
+            border-radius: 8px;
+            left: 10px;
+            top: 0;
+            text-align: center;
+            /* background-color: gray; */
+        }
+        main {
+            display: flex;
+        }
+        #room {
+            border-right: 1px solid black;
+            width: 80%;
+            height: 100%;
+        }
+        #meet {
+            width: 20%;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div id="ayuda">
+          <ul>
+            <li>Flechitas para moverse</li>
+            <li>Los que estén cerca hablan entre ellos</li>
+            <li>Permisos de cámara: permitir siempre</li>
+          </ul>
+        </div>
+        <div id="room">
+            <div id="pjPrincipal" class="pj"></div>
+        </div>
+        <aside id="meet"></aside>
+    </main>
+
+    <script src="https://meet.jit.si/external_api.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let socket = io()
+        let $pj = document.querySelector("#pjPrincipal")
+        let $room = document.querySelector("#room")
+        let nombre
+        
+        const speed = 20
+
+        function sendPos() {
+            let x = parseInt($pj.style.left)
+            let y = parseInt($pj.style.top)
+
+            socket.emit('position', {
+                x : x,
+                y : y
+            })
+        }
+
+        function isPositionEmpty(x,y) {
+            if ( x < 0 || y < 0 ) {
+                return false;
+            }
+            if ( x > parseInt(getComputedStyle($room).width) - speed ) {
+                return false;
+            }
+            if ( y > parseInt(getComputedStyle($room).height) - speed ) {
+                return false;
+            }
+
+            $pjs = document.querySelectorAll(".pj")
+
+            for ( let i = 0 ; i < $pjs.length ; i++ ) {
+                let $pj = $pjs[i]
+                let pjX = parseInt($pj.style.left)
+                let pjY = parseInt($pj.style.top)
+
+                if ( pjX == x && pjY == y ) {
+                    return false
+                }
+            }
+
+            return true;
+        }
+
+        window.addEventListener("load", (ev) => {
+            $pj.style.left = "10px"
+            $pj.style.top = "10px"
+
+            $room.style.height = window.innerHeight + "px"
+
+            // let nombre = "Le"
+            nombre = prompt("nombre")
+            if ( nombre == "" ) {
+                nombre = "x"
+            }
+            $pj.innerHTML = nombre.substr(0,2)
+            
+            socket.emit('set name', nombre)
+        })
+
+        window.addEventListener("keydown", (ev) => {
+            if ( ["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(ev.key) != -1 ) {
+                let x = parseInt($pj.style.left)
+                let y = parseInt($pj.style.top)
+    
+                switch( ev.key ) {
+                    case "ArrowUp":
+                        y -= speed
+                        break
+                    case "ArrowDown":
+                        y += speed
+                        break
+                    case "ArrowLeft":
+                        x -= speed
+                        break
+                    case "ArrowRight":
+                        x += speed
+                        break
+                }
+
+                if (isPositionEmpty(x,y)) {
+                    $pj.style.left = `${x}px`
+                    $pj.style.top = `${y}px`
+                    sendPos()
+                }
+            }
+        })
+
+        /////////////////////////////////////////
+        let jitsiAPI = null
+        let $meet = document.querySelector('#meet')
+        const jitsidomain = 'meet.jit.si';
+        
+        /////////////////////////////////////////
+
+        socket.on("position", (pos) => {
+            let $friend = document.querySelector(`.pj[data-id="${pos.id}"]`)
+
+            if ( !$friend ) {
+                $friend = document.createElement("div")
+                $friend.classList.add("pj")
+                $friend.dataset.id = pos.id
+                $friend.innerHTML = pos.name
+
+                $room.appendChild($friend)
+            }
+
+            $friend.style.left = pos.x + "px"
+            $friend.style.top = pos.y + "px"
+        })
+
+        socket.on("start call", (callID) => {
+            console.log("start call", callID)
+
+            const options = {
+                roomName: callID,
+                width: window.innerWidth * 0.2,
+                height: window.innerHeight,
+                parentNode: $meet,
+                interfaceConfigOverwrite : {
+                    // filmStripOnly: true,
+                    DEFAULT_REMOTE_DISPLAY_NAME: nombre,
+                    // TOOLBAR_BUTTONS: ["camera", "chat", "tileview", "filmstrip"]
+                }
+            };
+            
+            jitsiAPI = new JitsiMeetExternalAPI(jitsidomain, options);
+            // jitsiAPI.executeCommand('toggleAudio');
+        })
+
+        socket.on("end call", () => {
+            console.log("end call")
+            jitsiAPI.dispose()
+            $meet.innerHTML = ""
+
+        })
+
+        socket.on("user disconnected", (id) => {
+            let $friend = document.querySelector(`.pj[data-id="${id}"]`)
+            if ( $friend ) {
+                $friend.remove()
+            }
+        })
+
+        //////////////////////////////////////////
+        //////////////////////////////////////////
+    </script>
+</body>
+</html>
