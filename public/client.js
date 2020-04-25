@@ -5,6 +5,7 @@ let $chatWrite = document.querySelector("#chatWrite input")
 let $infoBeforeMeet = document.querySelector("#infoBeforeMeet")
 let $login = document.querySelector("#login")
 let $btnLogin = document.querySelector("#btnLogin")
+let $txtNombre = document.querySelector("#txtNombre")
 let $info = document.querySelector("#info")
 let nombre
 let started = false
@@ -52,10 +53,12 @@ window.addEventListener("load", (ev) => {
     $pj.style.top = "10px"
 
     $room.style.height = window.innerHeight + "px"
-    // $chatWrite.focus();
+    $txtNombre.focus();
 })
 
 window.addEventListener("keydown", (ev) => {
+    if (!started) return
+    
     if ( ["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(ev.key) != -1 ) {
         let x = parseInt($pj.style.left)
         let y = parseInt($pj.style.top)
@@ -89,7 +92,7 @@ window.addEventListener("keydown", (ev) => {
 
 $chatWrite.addEventListener("keydown", ev => {
     if (ev.keyCode == 13) {
-        //enviar
+        //TODO enviar chat
         $chatWrite.value = ""
     }
 })
@@ -97,6 +100,12 @@ $chatWrite.addEventListener("keydown", ev => {
 $chatWrite.addEventListener("focusout", ev => {
     if ( !started ) return
     setTimeout( () => $chatWrite.focus(), 100)
+})
+
+$txtNombre.addEventListener("keydown", ev => {
+    if ( ev.keyCode == 13 ) {
+        $btnLogin.click()
+    }
 })
 
 $btnLogin.addEventListener("click", ev => {
