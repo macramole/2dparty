@@ -1,6 +1,7 @@
 let socket = io()
 let $pj = document.querySelector("#pjPrincipal")
 let $room = document.querySelector("#room")
+let $chatWrite = document.querySelector("#chatWrite input")
 let nombre
 
 const speed = 20
@@ -55,6 +56,8 @@ window.addEventListener("load", (ev) => {
     $pj.innerHTML = nombre.substr(0,2)
     
     socket.emit('set name', nombre)
+
+    $chatWrite.focus();
 })
 
 window.addEventListener("keydown", (ev) => {
@@ -82,7 +85,21 @@ window.addEventListener("keydown", (ev) => {
             $pj.style.top = `${y}px`
             sendPos()
         }
+
+        ev.preventDefault()
     }
+})
+
+$chatWrite.addEventListener("keydown", ev => {
+    if (ev.keyCode == 13) {
+        //enviar
+        $chatWrite.value = ""
+    }
+})
+
+$chatWrite.addEventListener("focusout", ev => {
+    console.log("asd")
+    setTimeout( () => $chatWrite.focus(), 100)
 })
 
 /////////////////////////////////////////
@@ -132,7 +149,7 @@ socket.on("start call", (callID) => {
 
 socket.on("end call", () => {
     console.log("end call")
-    jitsiAPI.dispose()
+    if ( jitsiAPI ) jitsiAPI.dispose()
     $meet.innerHTML = ""
 
 })

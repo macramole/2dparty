@@ -25,3 +25,21 @@ main {
 #meet {
     width: 20%;
 }
+#chatWrite {
+    position: absolute;
+    bottom: 1em;
+    left: 1em;
+    display: flex;
+    align-items: center;
+    width: 81%;
+}
+#chatWrite input {
+    width: 100%;
+    border: 0;
+    padding-left: 0.5em;
+    box-sizing: border-box;
+}
+#chatWrite input:focus {
+    border: 0;
+    outline: none;
+}
