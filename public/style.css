@@ -14,16 +14,24 @@ body {
     text-align: center;
     /* background-color: gray; */
 }
+#pjPrincipal {
+    visibility: hidden;
+}
 main {
     display: flex;
 }
 #room {
-    border-right: 1px solid black;
-    width: 80%;
+    width: 70%;
     height: 100%;
+    background: url("bg.jpg")
+}
+#info {
+    display: none;
+    margin-top: 3em;
 }
 #meet {
-    width: 20%;
+    width: 30%;
+    background-color: #d8bfdd;
 }
 #chatWrite {
     position: absolute;
@@ -38,8 +46,47 @@ main {
     border: 0;
     padding-left: 0.5em;
     box-sizing: border-box;
+    background: none;
 }
 #chatWrite input:focus {
     border: 0;
     outline: none;
+}
+#infoBeforeMeet {
+    background-color: white;
+    height: 91%;
+    width: 80%;
+    margin: 7% auto;
+    text-align: center;
+    box-sizing: border-box;
+    padding-top: 2em;
+}
+
+#login {
+	margin-top: 6em;
+	width: 80%;
+	margin: 4em auto 0;
+	/* border: 1px solid #e1e1e1; */
+	padding: 2em 0;
+	/* background-color: #e1e1e1; */
+}
+#login input {
+    font-family: inherit;
+    font-size: 1em;
+}
+#login button {
+    margin-top: 2em;
+    background-color: #80ffc1;
+    border: none;
+    padding: 10px 33px;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    box-shadow: 4px 4px #aaa;
+    cursor: pointer;
+}
+#login button:active {
+    position: relative;
+    left: 4px;
+    top: 4px;
+    box-shadow: none;
 }

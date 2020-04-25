@@ -8,17 +8,25 @@
 </head>
 <body>
     <main>
-        <div id="ayuda">
-          <ul>
-            <li>Flechitas para moverse</li>
-            <li>Los que estén cerca hablan entre ellos</li>
-            <li>Permisos de cámara: permitir siempre</li>
-          </ul>
-        </div>
         <div id="room">
             <div id="pjPrincipal" class="pj"></div>
         </div>
-        <aside id="meet"></aside>
+        <aside id="meet">
+            <div id="infoBeforeMeet">
+                <img src="2dparty.jpg" alt="">
+                <div id="login">
+                    <input type="text" id="txtNombre" placeholder="Nombre"><br>
+                    <button type="button" id="btnLogin">Dale</button>
+                </div>
+                <div id="info">
+                    <ul>
+                        <li>Flechitas para moverse</li>
+                        <li>Acercate a alguien para hablarle</li>
+                        <li>Permisos de cámara: permitir siempre</li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
         <div id="chatWrite">
             <span>&gt;</span> <input type="text" />
         </div>

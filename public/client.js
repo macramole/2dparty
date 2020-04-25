@@ -2,7 +2,12 @@ let socket = io()
 let $pj = document.querySelector("#pjPrincipal")
 let $room = document.querySelector("#room")
 let $chatWrite = document.querySelector("#chatWrite input")
+let $infoBeforeMeet = document.querySelector("#infoBeforeMeet")
+let $login = document.querySelector("#login")
+let $btnLogin = document.querySelector("#btnLogin")
+let $info = document.querySelector("#info")
 let nombre
+let started = false
 
 const speed = 20
 
@@ -47,17 +52,7 @@ window.addEventListener("load", (ev) => {
     $pj.style.top = "10px"
 
     $room.style.height = window.innerHeight + "px"
-
-    // let nombre = "Le"
-    nombre = prompt("nombre")
-    if ( nombre == "" ) {
-        nombre = "x"
-    }
-    $pj.innerHTML = nombre.substr(0,2)
-    
-    socket.emit('set name', nombre)
-
-    $chatWrite.focus();
+    // $chatWrite.focus();
 })
 
 window.addEventListener("keydown", (ev) => {
@@ -90,6 +85,8 @@ window.addEventListener("keydown", (ev) => {
     }
 })
 
+
+
 $chatWrite.addEventListener("keydown", ev => {
     if (ev.keyCode == 13) {
         //enviar
@@ -98,8 +95,25 @@ $chatWrite.addEventListener("keydown", ev => {
 })
 
 $chatWrite.addEventListener("focusout", ev => {
-    console.log("asd")
+    if ( !started ) return
     setTimeout( () => $chatWrite.focus(), 100)
+})
+
+$btnLogin.addEventListener("click", ev => {
+    // let nombre = "Le"
+    nombre = document.querySelector("#txtNombre").value
+    if ( nombre == "" ) {
+        nombre = "x"
+    }
+    $pj.innerHTML = nombre.substr(0,2)
+    
+    socket.emit('set name', nombre)
+    $pj.style.visibility = "visible"
+    $login.style.display = "none"
+    $info.style.display = "block"
+    $chatWrite.focus()
+
+    started = true
 })
 
 /////////////////////////////////////////
@@ -130,7 +144,7 @@ socket.on("start call", (callID) => {
 
     const options = {
         roomName: callID,
-        width: window.innerWidth * 0.2,
+        width: window.innerWidth * 0.3,
         height: window.innerHeight,
         parentNode: $meet,
         userInfo : {
@@ -143,6 +157,7 @@ socket.on("start call", (callID) => {
         }
     };
     
+    $infoBeforeMeet.style.display = "none"
     jitsiAPI = new JitsiMeetExternalAPI(jitsidomain, options);
     // jitsiAPI.executeCommand('toggleAudio');
 })
@@ -150,7 +165,9 @@ socket.on("start call", (callID) => {
 socket.on("end call", () => {
     console.log("end call")
     if ( jitsiAPI ) jitsiAPI.dispose()
-    $meet.innerHTML = ""
+    
+    // $meet.querySelector("iframe").remove()
+    $infoBeforeMeet.style.display = "block"
 
 })
 
