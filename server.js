@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express()
 const http = require("http").createServer(app)
+const sanitizeHtml = require('sanitize-html');
 
 app.use(express.static("public"));
 
@@ -169,6 +170,19 @@ io.on('connection', function (socket) {
     socket.broadcast.emit("position", pos)
 
     checkNeedCall(socket.id)
+  })
+
+  socket.on("chat", (chatMessage) => {
+    if ( !chatMessage.message || chatMessage.message.trim() == "" ) return
+    
+    chatMessage = {
+      nombre : chatMessage.nombre ? sanitizeHtml(chatMessage.nombre) : "???",
+      message : chatMessage.message ? sanitizeHtml(chatMessage.message) : "???"
+    }
+
+    console.log(chatMessage)
+    
+    io.emit("chat", chatMessage)
   })
 
   // DISCONNECT

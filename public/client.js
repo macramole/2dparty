@@ -1,6 +1,7 @@
 let socket = io()
 let $pj = document.querySelector("#pjPrincipal")
 let $room = document.querySelector("#room")
+let $chatRead = document.querySelector("#chatRead")
 let $chatWrite = document.querySelector("#chatWrite input")
 let $infoBeforeMeet = document.querySelector("#infoBeforeMeet")
 let $login = document.querySelector("#login")
@@ -11,6 +12,8 @@ let nombre
 let started = false
 
 const speed = 20
+const roomPaddingTop = 90
+const roomPaddingBottom = 40
 
 function sendPos() {
     let x = parseInt($pj.style.left)
@@ -23,13 +26,13 @@ function sendPos() {
 }
 
 function isPositionEmpty(x,y) {
-    if ( x < 0 || y < 0 ) {
+    if ( x < 0 || y < roomPaddingTop ) {
         return false;
     }
     if ( x > parseInt(getComputedStyle($room).width) - speed ) {
         return false;
     }
-    if ( y > parseInt(getComputedStyle($room).height) - speed ) {
+    if ( y > parseInt(getComputedStyle($room).height) - roomPaddingBottom - speed ) {
         return false;
     }
 
@@ -58,7 +61,7 @@ window.addEventListener("load", (ev) => {
 
 window.addEventListener("keydown", (ev) => {
     if (!started) return
-    
+
     if ( ["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(ev.key) != -1 ) {
         let x = parseInt($pj.style.left)
         let y = parseInt($pj.style.top)
@@ -92,7 +95,12 @@ window.addEventListener("keydown", (ev) => {
 
 $chatWrite.addEventListener("keydown", ev => {
     if (ev.keyCode == 13) {
-        //TODO enviar chat
+        
+        socket.emit('chat', {
+            nombre : nombre,
+            message : $chatWrite.value
+        })
+
         $chatWrite.value = ""
     }
 })
@@ -118,6 +126,7 @@ $btnLogin.addEventListener("click", ev => {
     
     socket.emit('set name', nombre)
     $pj.style.visibility = "visible"
+    $pj.style.top = roomPaddingTop + "px"
     $login.style.display = "none"
     $info.style.display = "block"
     $chatWrite.focus()
@@ -146,6 +155,13 @@ socket.on("position", (pos) => {
 
     $friend.style.left = pos.x + "px"
     $friend.style.top = pos.y + "px"
+})
+
+socket.on("chat", (chatMessage) => {
+    console.log( "cath", chatMessage)
+    let msg = `<div class="chatLine"><span class="nombre">&lt;${chatMessage.nombre}&gt;</span> ${chatMessage.message}</div>`
+    $chatRead.innerHTML += msg
+    $chatRead.scrollTop = $chatRead.scrollHeight;
 })
 
 socket.on("start call", (callID) => {

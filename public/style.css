@@ -52,6 +52,22 @@ main {
     border: 0;
     outline: none;
 }
+#chatRead {
+    position: absolute;
+    width: 67%;
+    font-size: 0.9em;
+    padding: 0em 1em;
+    color: #040404;
+    font-family: "Courier New", mono;
+    overflow-y: scroll;
+    height: 5em;
+    margin-top: 0.5em;
+    background-color: #ffffffbd;
+    margin-left: 1em;
+}
+#chatRead .nombre {
+    color: #686868  ;
+}
 #infoBeforeMeet {
     background-color: white;
     height: 91%;
