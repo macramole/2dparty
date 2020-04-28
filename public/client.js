@@ -160,10 +160,10 @@ $userConfig
   .addEventListener('change', function (e) {
     user.isAdminOfArea = this.checked
     if (user.isAdminOfArea) {
-      $pj.style.background = 'red'
+      $pj.classList.add('adminOfArea')
       buildTooltip($pj)
     } else {
-      $pj.style.background = '#f1ff90'
+      $pj.classList.remove('adminOfArea')
     }
   })
 
