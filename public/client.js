@@ -164,7 +164,7 @@ $userConfig
     if (user.isAdminOfArea) {
       $pj.style.background = 'red'
     } else {
-      $pj.style.background = 'white'
+      $pj.style.background = '#f1ff90'
     }
   })
 
@@ -213,8 +213,8 @@ socket.on('position', (pos) => {
 socket.on('chat', (chatMessage) => {
   console.log('cath', chatMessage)
 
-  user.chat[user.atArea].push(chatMessage)
-  $chatRead.innerHTML = buildChat(user.chat[user.atArea])
+  userConfig.chat[userConfig.atArea].push(chatMessage)
+  $chatRead.innerHTML = buildChat(userConfig.chat[userConfig.atArea])
   $chatRead.scrollTop = $chatRead.scrollHeight
 
   function buildChat(msgs) {
