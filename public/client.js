@@ -25,7 +25,7 @@ let user = {
 let nombre
 let started = false
 
-const speed = 20
+const speed = 35
 const roomPaddingTop = 90
 const roomPaddingBottom = 40
 
