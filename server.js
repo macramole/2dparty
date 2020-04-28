@@ -3,6 +3,8 @@ const app = express()
 const http = require("http").createServer(app)
 const sanitizeHtml = require('sanitize-html');
 
+const speed = 35 //esto tiene que ser igual en cliente y servidor !!!
+
 app.use(express.static("public"));
 
 app.get('/', function (req, res) {
@@ -19,7 +21,6 @@ http.listen(port, function () {
   
 let io = require("socket.io")(http)
 let users = {}
-const speed = 20
 
 function makeCallID() {
   let length = 20;
