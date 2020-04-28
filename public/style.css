@@ -4,17 +4,18 @@ body {
   overflow: hidden;
 }
 .pj {
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  border-radius: 24px;
-  left: 10px;
-  top: 0;
-  text-align: center;
-  background-color: #f1ff90;
-  color: #1aa4c4;
-  box-shadow: 2px 2px #ff22c8;
-  line-height: 29px;
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	border-radius: 24px;
+	left: 10px;
+	top: 0;
+	text-align: center;
+	background-color: #f1ff90;
+	color: #1aa4c4;
+	box-shadow: 2px 2px #ff22c8;
+    line-height: 29px;
+    border: 1px solid #cecece;
 }
 #pjPrincipal {
   visibility: hidden;
