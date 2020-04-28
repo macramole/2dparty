@@ -181,12 +181,14 @@ $userConfig
   })
 
 function buildTooltip(node) {
+  var tltp = document.querySelector('.tooltip')
+  if (tltp) {
+    tltp.remove()
+  }
   var toolTip = document.createElement('div')
   toolTip.className = 'tooltip'
 
   node.addEventListener('mouseover', function (e) {
-    console.log('on')
-    console.log(node)
     toolTip.innerHTML = user.areaDescription
     toolTip.style.left = `${parseInt($pj.style.left) + 40}px`
     toolTip.style.top = `${parseInt($pj.style.top) - 20}px`
@@ -194,7 +196,6 @@ function buildTooltip(node) {
   })
 
   node.addEventListener('mouseleave', function (e) {
-    console.log('off')
     document.querySelector('.tooltip').remove()
   })
 }
