@@ -225,7 +225,7 @@ socket.on('position', (pos) => {
 
 socket.on('chat', (chatMessage) => {
   console.log('cath', chatMessage)
-
+  console.log('mag', user.atArea)
   user.chat[user.atArea].push(chatMessage)
   $chatRead.innerHTML = buildChat(user.chat[user.atArea])
   $chatRead.scrollTop = $chatRead.scrollHeight
@@ -251,6 +251,10 @@ socket.on('start call', (callID) => {
   console.log('start call', callID)
 
   user.atArea = callID
+
+  if (!user.chat[user.atArea]) {
+    user.chat[user.atArea] = []
+  }
 
   const options = {
     roomName: callID,
