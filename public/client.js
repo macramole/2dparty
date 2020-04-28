@@ -1,7 +1,5 @@
 let socket = io()
 let $pj = document.querySelector('#pjPrincipal')
-let $everyPj = document.querySelectorAll('.pj') //on hover de cada user?
-console.log($everyPj)
 let $room = document.querySelector('#room')
 let $chatRead = document.querySelector('#chatRead')
 let $chatWrite = document.querySelector('#chatWrite input')
@@ -162,9 +160,10 @@ $userConfig
   .addEventListener('change', function (e) {
     user.isAdminOfArea = this.checked
     if (user.isAdminOfArea) {
-      $pj.style.background = 'red'
+      $pj.classList.add('adminOfArea')
+      buildTooltip($pj)
     } else {
-      $pj.style.background = '#f1ff90'
+      $pj.classList.remove('adminOfArea')
     }
   })
 
@@ -181,11 +180,24 @@ $userConfig
     user.areaDescription = text
   })
 
-$everyPj.forEach(function (node) {
+function buildTooltip(node) {
+  var toolTip = document.createElement('div')
+  toolTip.className = 'tooltip'
+
   node.addEventListener('mouseover', function (e) {
-    console.log('hover')
+    console.log('on')
+    console.log(node)
+    toolTip.innerHTML = user.areaDescription
+    toolTip.style.left = `${parseInt($pj.style.left) + 40}px`
+    toolTip.style.top = `${parseInt($pj.style.top) - 20}px`
+    node.before(toolTip)
   })
-})
+
+  node.addEventListener('mouseleave', function (e) {
+    console.log('off')
+    document.querySelector('.tooltip').remove()
+  })
+}
 
 /////////////////////////////////////////
 let jitsiAPI = null
@@ -213,8 +225,8 @@ socket.on('position', (pos) => {
 socket.on('chat', (chatMessage) => {
   console.log('cath', chatMessage)
 
-  userConfig.chat[userConfig.atArea].push(chatMessage)
-  $chatRead.innerHTML = buildChat(userConfig.chat[userConfig.atArea])
+  user.chat[user.atArea].push(chatMessage)
+  $chatRead.innerHTML = buildChat(user.chat[user.atArea])
   $chatRead.scrollTop = $chatRead.scrollHeight
 
   function buildChat(msgs) {
