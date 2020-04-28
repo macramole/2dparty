@@ -27,6 +27,7 @@ main {
   height: 100%;
   background: url('bg.jpg');
 }
+
 #info {
   display: none;
   margin-top: 3em;
@@ -131,4 +132,15 @@ main {
   font-size: 1.2em;
   box-sizing: border-box;
   padding: 20px;
+}
+
+.tooltip {
+  position: relative;
+  word-break: break-all;
+  width: 120px;
+  border: 2px solid red;
+  padding: 8px;
+  background: white;
+  opacity: 0.8;
+  z-index: 2;
 }

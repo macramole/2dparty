@@ -174,9 +174,9 @@ $userConfig
     var text = e.target.value.trim()
 
     if (text.length === 0) {
-      $user.querySelector('#speakerText').style.border = '1px solid black'
+      $userConfig.querySelector('#speakerText').style.border = '1px solid black'
     } else if (user.areaDescription === '') {
-      $user.querySelector('#speakerText').style.border = '2px solid red'
+      $userConfig.querySelector('#speakerText').style.border = '2px solid red'
     }
     user.areaDescription = text
   })
