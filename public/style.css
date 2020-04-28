@@ -14,7 +14,8 @@ body {
 	background-color: #f1ff90;
 	color: #1aa4c4;
 	box-shadow: 2px 2px #ff22c8;
-	line-height: 29px;
+    line-height: 29px;
+    border: 1px solid #cecece;
 }
 #pjPrincipal {
     visibility: hidden;
