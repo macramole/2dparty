@@ -19,7 +19,7 @@ const AREA_WORLD = "world"
 
 let user = {
   nombre: '',
-  joinedUniverse: false,
+  joinedWorld: false,
   joinedRoom: false,
   atArea: AREA_WORLD,
   isAdminOfArea: false,
@@ -84,7 +84,7 @@ window.addEventListener('load', (ev) => {
 })
 
 window.addEventListener('keydown', (ev) => {
-  if (!user.joinedUniverse) return
+  if (!user.joinedWorld) return
 
   if (
     ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(ev.key) != -1 &&
@@ -118,6 +118,10 @@ window.addEventListener('keydown', (ev) => {
   }
 })
 
+$room.addEventListener("click", ev => {
+	$chatWrite.focus()
+})
+
 $chatWrite.addEventListener('keydown', (ev) => {
   if (ev.keyCode == 13) {
     socket.emit('chat', {
@@ -129,14 +133,6 @@ $chatWrite.addEventListener('keydown', (ev) => {
   }
 })
 
-$chatWrite.addEventListener('focusout', (ev) => {
-  if (!user.joinedUniverse) return
-  /* Esto lo duermo para que no me jeda otros inputs, 
-   * Está bueno que sea automático igual...
-  setTimeout(() => $chatWrite.focus(), 100)
-  */
-})
-
 $txtNombre.addEventListener('keydown', (ev) => {
   if (ev.keyCode == 13) {
     $btnLogin.click()
@@ -144,10 +140,9 @@ $txtNombre.addEventListener('keydown', (ev) => {
 })
 
 $btnLogin.addEventListener('click', (ev) => {
-  // let nombre = "Le"
   var n = document.querySelector('#txtNombre').value
   if (n == '') {
-    n = 'x'
+    n = 'xx'
   }
   $pj.innerHTML = n.substr(0, 2)
   user.nombre = n
@@ -159,7 +154,7 @@ $btnLogin.addEventListener('click', (ev) => {
   $info.style.display = 'block'
   $chatWrite.focus()
 
-  user.joinedUniverse = true
+  user.joinedWorld = true
 })
 
 $userConfig
