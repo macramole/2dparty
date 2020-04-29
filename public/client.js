@@ -1,4 +1,5 @@
 let socket = io()
+
 let $pj = document.querySelector('#pjPrincipal')
 let $room = document.querySelector('#room')
 let $chatRead = document.querySelector('#chatRead')
@@ -9,12 +10,18 @@ let $btnLogin = document.querySelector('#btnLogin')
 let $txtNombre = document.querySelector('#txtNombre')
 let $info = document.querySelector('#info')
 let $userConfig = document.querySelector('#userConfig')
+let $meet = document.querySelector('#meet')
+
+let jitsiAPI = null
+const jitsidomain = 'meet.jit.si'
+
+const AREA_WORLD = "world"
 
 let user = {
   nombre: '',
   joinedUniverse: false,
   joinedRoom: false,
-  atArea: 'lobby',
+  atArea: AREA_WORLD,
   isAdminOfArea: false,
   areaDescription: '',
   chat: {
@@ -201,9 +208,8 @@ function buildTooltip(node) {
 }
 
 /////////////////////////////////////////
-let jitsiAPI = null
-let $meet = document.querySelector('#meet')
-const jitsidomain = 'meet.jit.si'
+
+// WEBSOCKET
 
 /////////////////////////////////////////
 
@@ -278,12 +284,8 @@ socket.on('start call', (callID) => {
 
 socket.on('end call', () => {
   console.log('end call')
-
-  user.atArea = null
-
+  user.atArea = AREA_WORLD
   if (jitsiAPI) jitsiAPI.dispose()
-
-  // $meet.querySelector("iframe").remove()
   $infoBeforeMeet.style.display = 'block'
 })
 
