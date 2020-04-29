@@ -24,10 +24,9 @@ let user = {
   atArea: AREA_WORLD,
   isAdminOfArea: false,
   areaDescription: '',
-  chat: {
-    lobby: [],
-  },
+  chat: {},
 }
+user.chat[AREA_WORLD] = []
 
 let nombre
 let started = false
