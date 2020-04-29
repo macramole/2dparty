@@ -194,9 +194,12 @@ $userConfig
       $pj.classList.add('adminOfArea')
       buildTooltip($pj)
       // create room
+      socket.emit('createArea')
+      console.log(socket.io)
     } else {
-      $pj.classList.remove('adminOfArea')
       //destroy room
+      socket.emit('destroyArea')
+      $pj.classList.remove('adminOfArea')
     }
   })
 
@@ -256,8 +259,6 @@ socket.on('position', (pos) => {
 })
 
 socket.on('chat', (chatMessage) => {
-  //   console.log('cath', chatMessage)
-  //   console.log('mag', user.atArea)
   user.chat[user.atArea].push(chatMessage)
   $chatRead.innerHTML = buildChat(user.chat[user.atArea])
   $chatRead.scrollTop = $chatRead.scrollHeight

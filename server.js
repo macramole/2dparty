@@ -1,14 +1,14 @@
-const express = require('express');
+const express = require('express')
 const app = express()
-const http = require("http").createServer(app)
-const sanitizeHtml = require('sanitize-html');
+const http = require('http').createServer(app)
+const sanitizeHtml = require('sanitize-html')
 
 const speed = 25 //esto tiene que ser igual en cliente y servidor !!!
 
-app.use(express.static("public"));
+app.use(express.static('public'))
 
 app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/views/index.html');
+  res.sendFile(__dirname + '/views/index.html')
 })
 
 let port = process.env.PORT || 3000
@@ -18,38 +18,41 @@ http.listen(port, function () {
 
 //////////////////////////////
 //////////////////////////////
-  
-let io = require("socket.io")(http)
+
+let io = require('socket.io')(http)
 let users = {}
 
 function makeCallID() {
-  let length = 20;
-  var result           = '';
-  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for ( var i = 0; i < length; i++ ) {
-     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  let length = 20
+  var result = ''
+  var characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  var charactersLength = characters.length
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
   }
-  return result;
+  return result
 }
 
 function getPeopleNear(userID) {
   let cUser = users[userID]
   let idsNear = []
 
-  for ( let otherUserID in users ) {
-    if ( userID == otherUserID ) continue;
+  for (let otherUserID in users) {
+    if (userID == otherUserID) continue
 
     let user = users[otherUserID]
-    if ( !user.pos ) {
+    if (!user.pos) {
       continue
     }
 
-    for ( let dx = -1 ; dx <= 1; dx ++ ) {
-      for ( let dy = -1 ; dy <= 1; dy ++ ) {
-        if (dx==0 && dy==0) continue
-        if ( user.pos.x == cUser.pos.x + speed * dx && 
-             user.pos.y == cUser.pos.y + speed * dy ) {
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -1; dy <= 1; dy++) {
+        if (dx == 0 && dy == 0) continue
+        if (
+          user.pos.x == cUser.pos.x + speed * dx &&
+          user.pos.y == cUser.pos.y + speed * dy
+        ) {
           idsNear.push(otherUserID)
         }
       }
@@ -63,20 +66,20 @@ function checkLeftAlone(userID) {
   //si eran dos y el otro quedó solo deberia desconectarlo
   let cUser = users[userID]
   let oneFriend = null
-  for ( let uid in users ) {
-    let u = users[uid] 
-    if ( u.id == userID ) continue
-    if ( u.callID == cUser.callID ) {
-      if ( oneFriend == null ) {
+  for (let uid in users) {
+    let u = users[uid]
+    if (u.id == userID) continue
+    if (u.callID == cUser.callID) {
+      if (oneFriend == null) {
         oneFriend = u.id
       } else {
         oneFriend = null
-        break;
+        break
       }
     }
   }
-  if ( oneFriend ) {
-    io.to(oneFriend).emit("end call")
+  if (oneFriend) {
+    io.to(oneFriend).emit('end call')
     users[oneFriend].callID = null
   }
 }
@@ -89,110 +92,141 @@ function checkNeedCall(userID) {
   }
 
   let nearUsers = getPeopleNear(userID)
-  
+
   //si no hay nadie cerca
-  if ( nearUsers.length == 0 ) {
-    if ( cUser.callID ) { // si estaba en una llamada y se fue
-      io.to(cUser.id).emit("end call")
+  if (nearUsers.length == 0) {
+    if (cUser.callID) {
+      // si estaba en una llamada y se fue
+      io.to(cUser.id).emit('end call')
       // checkLeftAlone(userID)
-      
+
       cUser.callID = null
     }
-  } else { //si hay alguien cerca
-    
-    if ( cUser.callID == null ) { //si hay gente cerca y no estas en una llamada
+  } else {
+    //si hay alguien cerca
+
+    if (cUser.callID == null) {
+      //si hay gente cerca y no estas en una llamada
       //deberia mirar si los que estan cerca no están en una llamada
       let nearCall = null
-      
-      for ( let otherUserID of nearUsers ) {
-        if ( users[otherUserID].callID ) {
+
+      for (let otherUserID of nearUsers) {
+        if (users[otherUserID].callID) {
           nearCall = users[otherUserID].callID
           break
         }
       }
-      
-      if ( nearCall ) {
+
+      if (nearCall) {
         cUser.callID = nearCall
-        io.to(cUser.id).emit("start call", nearCall)
+        io.to(cUser.id).emit('start call', nearCall)
       } else {
-        let newCallID = makeCallID()
-        cUser.callID = newCallID
-        io.to(cUser.id).emit("start call", newCallID)
-
-        for ( let otherUserID of nearUsers ) {
-          users[otherUserID].callID = newCallID
-          io.to(otherUserID).emit("start call", newCallID)
+        // Si el user había creado un room ya tenemos call id
+        let newCallID
+        if (!cUser.callID) {
+          newCallID = makeCallID()
+          cUser.callID = newCallID
+        } else {
+          newCallID = cUser.callID
         }
-      } 
-    } else {
+        io.to(cUser.id).emit('start call', newCallID)
+        //uno user al room
+        io.sockets.sockets[userID].join(newCallID)
 
+        for (let otherUserID of nearUsers) {
+          //uno user al room
+          io.sockets.sockets[otherUserID].join(newCallID)
+          users[otherUserID].callID = newCallID
+          io.to(otherUserID).emit('start call', newCallID)
+        }
+      }
+    } else {
     }
   }
-
 }
 
 io.on('connection', function (socket) {
   console.log(`user connected: ${socket.id}`)
-  
-  for ( let userID in users ) {
-    if ( users[userID].pos ) {
+
+  // ROOMS
+  socket.on('createArea', function () {
+    //creo un call id para identificar el room. Se usará para futuras llamadas
+    let callID = makeCallID()
+    users[socket.id].callID = callID
+    socket.join(callID)
+    console.log('created room with id', callID)
+  })
+
+  socket.on('destroyArea', function () {
+    socket.leave(users[socket.id].callID)
+    console.log('destroyed room', socket.id)
+  })
+
+  for (let userID in users) {
+    if (users[userID].pos) {
       let pos = {
-        x : users[userID].pos.x,
-        y : users[userID].pos.y,
-        id : userID,
-        name : users[userID].name ? users[userID].name.substr(0,2) : "pa"
+        x: users[userID].pos.x,
+        y: users[userID].pos.y,
+        id: userID,
+        name: users[userID].name ? users[userID].name.substr(0, 2) : 'pa',
       }
-      socket.emit("position", pos)
+      socket.emit('position', pos)
     }
   }
-  
+
   users[socket.id] = {
-    id : socket.id,
-    pos : null,
-    callID : null
+    id: socket.id,
+    pos: null,
+    callID: null,
   }
   let user = users[socket.id]
 
-  socket.on("set name", (name) => {
+  socket.on('set name', (name) => {
     user.name = name
   })
-  
+
   // POSITION
-  socket.on("position", (pos) => {
-    if ( !user.pos ) {
+  socket.on('position', (pos) => {
+    if (!user.pos) {
       user.pos = {}
     }
 
     user.pos.x = pos.x
     user.pos.y = pos.y
-    
+
     pos.id = socket.id
-    pos.name = user.name ? user.name.substr(0,2) : "x"
-    socket.broadcast.emit("position", pos)
+    pos.name = user.name ? user.name.substr(0, 2) : 'x'
+    socket.broadcast.emit('position', pos)
 
     checkNeedCall(socket.id)
   })
 
-  socket.on("chat", (chatMessage) => {
-    if ( !chatMessage.message || chatMessage.message.trim() == "" ) return
-    
+  socket.on('chat', (chatMessage) => {
+    if (!chatMessage.message || chatMessage.message.trim() == '') return
+
     chatMessage = {
-      nombre : chatMessage.nombre ? sanitizeHtml(chatMessage.nombre) : "???",
-      message : chatMessage.message ? sanitizeHtml(chatMessage.message) : "???"
+      nombre: chatMessage.nombre ? sanitizeHtml(chatMessage.nombre) : '???',
+      message: chatMessage.message ? sanitizeHtml(chatMessage.message) : '???',
     }
 
     console.log(chatMessage)
-    
-    io.emit("chat", chatMessage)
+    // Si estás en una llamada manda el msj al room de la llamada
+    if (user.callID) {
+      io.to(socket.rooms[user.callID]).emit('chat', chatMessage)
+    } else {
+      // Esto se podría dejar de mandar a todx
+      io.emit('chat', chatMessage)
+    }
   })
 
   // DISCONNECT
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log('user disconnected')
     checkLeftAlone(socket.id)
-    
-    socket.broadcast.emit("user disconnected", socket.id)
+
+    socket.broadcast.emit('user disconnected', socket.id)
     delete users[socket.id]
     console.log(users)
-  });
+  })
 })
+
