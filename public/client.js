@@ -30,6 +30,7 @@ user.chat[AREA_WORLD] = []
 
 let nombre
 let started = false
+let showingConfig = false
 
 const speed = 25 //esto hay que cambiar en el servidor y en el cliente !!
 const roomPaddingTop = 0 //absoluto
@@ -118,6 +119,14 @@ window.addEventListener('keydown', (ev) => {
   }
 })
 
+// Para cerrar la config si clickeo afuera
+window.addEventListener('click', function (e) {
+  if (showingConfig) {
+    document.querySelector('#userConfigWindow').classList.add('hide')
+    showingConfig = false
+  }
+})
+
 $room.addEventListener('click', (ev) => {
   $chatWrite.focus()
 })
@@ -157,6 +166,26 @@ $btnLogin.addEventListener('click', (ev) => {
   user.joinedWorld = true
 })
 
+// Oculto o muestro la config
+$userConfig
+  .querySelector('#showConfig')
+  .addEventListener('click', function (e) {
+    var config = $userConfig.querySelector('#userConfigWindow')
+    showingConfig
+      ? config.classList.add('hide')
+      : config.classList.remove('hide')
+
+    showingConfig = !showingConfig
+    event.stopPropagation()
+  })
+
+//Para que no se cierre la ventana de click cuando clickeo en ella
+$userConfig
+  .querySelector('#userConfigWindow')
+  .addEventListener('click', function (e) {
+    e.stopPropagation()
+  })
+
 $userConfig
   .querySelector('#isAdminOfArea')
   .addEventListener('change', function (e) {
@@ -164,8 +193,10 @@ $userConfig
     if (user.isAdminOfArea) {
       $pj.classList.add('adminOfArea')
       buildTooltip($pj)
+      // create room
     } else {
       $pj.classList.remove('adminOfArea')
+      //destroy room
     }
   })
 
