@@ -12,11 +12,11 @@ let $userConfig = document.querySelector('#userConfig')
 
 let user = {
   nombre: '',
-  joinedUniverse: false,
-  joinedRoom: false,
-  atArea: 'lobby',
-  isAdminOfArea: false,
-  areaDescription: '',
+  joinedUniverse: false, // si te uniste a la partida
+  joinedRoom: false, // si te uniste a un cuarto
+  atArea: 'lobby', // lobby o el id de la call
+  isAdminOfArea: false, // modo parlante
+  areaDescription: '', // el texto que el user elije para su área
   chat: {
     lobby: [],
   },
@@ -181,14 +181,14 @@ $userConfig
   })
 
 function buildTooltip(node) {
-  var tltp = document.querySelector('.tooltip')
-  if (tltp) {
-    tltp.remove()
-  }
   var toolTip = document.createElement('div')
   toolTip.className = 'tooltip'
 
   node.addEventListener('mouseover', function (e) {
+    var tltp = document.querySelector('.tooltip')
+    if (tltp) {
+      tltp.remove()
+    }
     toolTip.innerHTML = user.areaDescription
     toolTip.style.left = `${parseInt($pj.style.left) + 40}px`
     toolTip.style.top = `${parseInt($pj.style.top) - 20}px`
