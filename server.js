@@ -158,8 +158,10 @@ io.on('connection', function (socket) {
   })
 
   socket.on('destroyArea', function () {
+    /*
     socket.leave(users[socket.id].callID)
     console.log('destroyed room', socket.id)
+    */
   })
 
   for (let userID in users) {
