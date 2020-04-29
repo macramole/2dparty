@@ -31,9 +31,10 @@ user.chat[AREA_WORLD] = []
 let nombre
 let started = false
 
-const speed = 35
-const roomPaddingTop = 90
-const roomPaddingBottom = 40
+const speed = 25 //esto hay que cambiar en el servidor y en el cliente !!
+const roomPaddingTop = 0 //absoluto
+const roomPaddingBottom = 0 //absoluto
+const roomPaddingRight = 0.55 //porcentaje
 
 function sendPos() {
   let x = parseInt($pj.style.left)
@@ -49,7 +50,7 @@ function isPositionEmpty(x, y) {
   if (x < 0 || y < roomPaddingTop) {
     return false
   }
-  if (x > parseInt(getComputedStyle($room).width) - speed) {
+  if (x > parseInt(getComputedStyle($room).width) * roomPaddingRight - speed) {
     return false
   }
   if (
