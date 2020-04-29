@@ -119,6 +119,8 @@ function checkNeedCall(userID) {
 
       if (nearCall) {
         cUser.callID = nearCall
+        //uno user al room
+        io.sockets.sockets[userID].join(cUser.callID)
         io.to(cUser.id).emit('start call', nearCall)
       } else {
         // Si el user había creado un room ya tenemos call id
@@ -228,7 +230,7 @@ io.on('connection', function (socket) {
     if (user.callID) {
       io.to(socket.rooms[user.callID]).emit('chat', chatMessage)
     } else {
-      // Esto se podría dejar de mandar a todx
+      // Esto se podría dejar de mandar a todx (podría haber un room default?)
       io.emit('chat', chatMessage)
     }
   })
