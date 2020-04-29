@@ -1,4 +1,5 @@
 let socket = io()
+
 let $pj = document.querySelector('#pjPrincipal')
 let $room = document.querySelector('#room')
 let $chatRead = document.querySelector('#chatRead')
@@ -9,25 +10,31 @@ let $btnLogin = document.querySelector('#btnLogin')
 let $txtNombre = document.querySelector('#txtNombre')
 let $info = document.querySelector('#info')
 let $userConfig = document.querySelector('#userConfig')
+let $meet = document.querySelector('#meet')
+
+let jitsiAPI = null
+const jitsidomain = 'meet.jit.si'
+
+const AREA_WORLD = 'world'
 
 let user = {
   nombre: '',
-  joinedUniverse: false, // si te uniste a la partida
-  joinedRoom: false, // si te uniste a un cuarto
-  atArea: 'lobby', // lobby o el id de la call
-  isAdminOfArea: false, // modo parlante
-  areaDescription: '', // el texto que el user elije para su área
-  chat: {
-    lobby: [],
-  },
+  joinedWorld: false,
+  joinedRoom: false,
+  atArea: AREA_WORLD,
+  isAdminOfArea: false,
+  areaDescription: '',
+  chat: {},
 }
+user.chat[AREA_WORLD] = []
 
 let nombre
 let started = false
 
-const speed = 35
-const roomPaddingTop = 90
-const roomPaddingBottom = 40
+const speed = 25 //esto hay que cambiar en el servidor y en el cliente !!
+const roomPaddingTop = 0 //absoluto
+const roomPaddingBottom = 0 //absoluto
+const roomPaddingRight = 0.55 //porcentaje
 
 function sendPos() {
   let x = parseInt($pj.style.left)
@@ -43,7 +50,7 @@ function isPositionEmpty(x, y) {
   if (x < 0 || y < roomPaddingTop) {
     return false
   }
-  if (x > parseInt(getComputedStyle($room).width) - speed) {
+  if (x > parseInt(getComputedStyle($room).width) * roomPaddingRight - speed) {
     return false
   }
   if (
@@ -77,7 +84,7 @@ window.addEventListener('load', (ev) => {
 })
 
 window.addEventListener('keydown', (ev) => {
-  if (!user.joinedUniverse) return
+  if (!user.joinedWorld) return
 
   if (
     ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(ev.key) != -1 &&
@@ -111,6 +118,10 @@ window.addEventListener('keydown', (ev) => {
   }
 })
 
+$room.addEventListener('click', (ev) => {
+  $chatWrite.focus()
+})
+
 $chatWrite.addEventListener('keydown', (ev) => {
   if (ev.keyCode == 13) {
     socket.emit('chat', {
@@ -122,14 +133,6 @@ $chatWrite.addEventListener('keydown', (ev) => {
   }
 })
 
-$chatWrite.addEventListener('focusout', (ev) => {
-  if (!user.joinedUniverse) return
-  /* Esto lo duermo para que no me jeda otros inputs, 
-   * Está bueno que sea automático igual...
-  setTimeout(() => $chatWrite.focus(), 100)
-  */
-})
-
 $txtNombre.addEventListener('keydown', (ev) => {
   if (ev.keyCode == 13) {
     $btnLogin.click()
@@ -137,10 +140,9 @@ $txtNombre.addEventListener('keydown', (ev) => {
 })
 
 $btnLogin.addEventListener('click', (ev) => {
-  // let nombre = "Le"
   var n = document.querySelector('#txtNombre').value
   if (n == '') {
-    n = 'x'
+    n = 'xx'
   }
   $pj.innerHTML = n.substr(0, 2)
   user.nombre = n
@@ -152,7 +154,7 @@ $btnLogin.addEventListener('click', (ev) => {
   $info.style.display = 'block'
   $chatWrite.focus()
 
-  user.joinedUniverse = true
+  user.joinedWorld = true
 })
 
 $userConfig
@@ -201,9 +203,8 @@ function buildTooltip(node) {
 }
 
 /////////////////////////////////////////
-let jitsiAPI = null
-let $meet = document.querySelector('#meet')
-const jitsidomain = 'meet.jit.si'
+
+// WEBSOCKET
 
 /////////////////////////////////////////
 
@@ -224,8 +225,8 @@ socket.on('position', (pos) => {
 })
 
 socket.on('chat', (chatMessage) => {
-  console.log('cath', chatMessage)
-  console.log('mag', user.atArea)
+  //   console.log('cath', chatMessage)
+  //   console.log('mag', user.atArea)
   user.chat[user.atArea].push(chatMessage)
   $chatRead.innerHTML = buildChat(user.chat[user.atArea])
   $chatRead.scrollTop = $chatRead.scrollHeight
@@ -258,8 +259,8 @@ socket.on('start call', (callID) => {
 
   const options = {
     roomName: callID,
-    width: window.innerWidth * 0.3,
-    height: window.innerHeight,
+    width: window.innerWidth * 0.45,
+    height: window.innerHeight * 0.54,
     parentNode: $meet,
     userInfo: {
       displayName: user.nombre,
@@ -278,12 +279,8 @@ socket.on('start call', (callID) => {
 
 socket.on('end call', () => {
   console.log('end call')
-
-  user.atArea = null
-
+  user.atArea = AREA_WORLD
   if (jitsiAPI) jitsiAPI.dispose()
-
-  // $meet.querySelector("iframe").remove()
   $infoBeforeMeet.style.display = 'block'
 })
 
@@ -293,4 +290,3 @@ socket.on('user disconnected', (id) => {
     $friend.remove()
   }
 })
-

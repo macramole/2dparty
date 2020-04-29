@@ -3,7 +3,7 @@ const app = express()
 const http = require("http").createServer(app)
 const sanitizeHtml = require('sanitize-html');
 
-const speed = 35 //esto tiene que ser igual en cliente y servidor !!!
+const speed = 25 //esto tiene que ser igual en cliente y servidor !!!
 
 app.use(express.static("public"));
 

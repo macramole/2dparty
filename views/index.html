@@ -1,63 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2D Party</title>
-    <link rel="stylesheet" href="style.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>2D Party</title>
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <main>
-        <div id="room">
-            <div id="pjPrincipal" class="pj"></div>
-        </div>
-        <aside id="meet">
-            <div id="infoBeforeMeet">
-                <img src="2dparty.jpg" alt="">
-                <div id="login">
-                    <input type="text" id="txtNombre" placeholder="Nombre"><br>
-                    <button type="button" id="btnLogin">Dale</button>
-                </div>
-                <div id="info">
-                    <ul>
-                        <li>Flechitas para moverse</li>
-                        <li>Acercate a alguien para hablarle</li>
-                        <li>Permisos de cámara: permitir siempre</li>
-                    </ul>
-                    <div id="userConfig">
-                      <div>
-                        <label for="isAdminOfArea">Inaugurar Área</label>
-                        <input type="checkbox" name="isAdminOfArea" id="isAdminOfArea">
-                      </div>
-                      <div>
-                        <label for="allowMics">Permitir otros mics</label>
-                        <input type="checkbox" name="allowMics" id="allowMics">
-                      </div>
-                      <div>
-                        <label for="allowCams">Permitir otras cams</label>
-                        <input type="checkbox" name="allowCams" id="allowMics">
-                      </div>
-                      <div>
-                        <textarea 
-                          name="speakerText" 
-                          id="speakerText" 
-                          cols="15" 
-                          rows="10"
-                          placeholder="texto para describir el área"
-                          ></textarea>
-                      </div>
-                    </div>
-                </div>
-            </div>
-        </aside>
-        <div id="chatRead"></div>
-        <div id="chatWrite">
-            <span>&gt;</span> <input type="text" />
-        </div>
-    </main>
+	<main>
+		<div id="room">
+			<div id="pjPrincipal" class="pj"></div>
+		</div>
+		<aside id="meet">
+			<div id="infoBeforeMeet">
+				<img src="2dparty.jpg" alt="">
+				<div id="login">
+					<input type="text" id="txtNombre" placeholder="Nombre"><br>
+					<button type="button" id="btnLogin">Dale</button>
+				</div>
+				<div id="info">
+					<ul>
+						<li>Flechitas para moverse</li>
+						<li>Acercate a alguien para hablarle</li>
+						<li>Permisos de cámara: permitir siempre</li>
+					</ul>
+					<div id="userConfig">
+					  <div>
+							<label for="isAdminOfArea">Inaugurar Área</label>
+							<input type="checkbox" name="isAdminOfArea" id="isAdminOfArea">
+					  </div>
+					  <div>
+							<label for="allowMics">Permitir otros mics</label>
+							<input type="checkbox" name="allowMics" id="allowMics">
+					  </div>
+					  <div>
+							<label for="allowCams">Permitir otras cams</label>
+							<input type="checkbox" name="allowCams" id="allowMics">
+					  </div>
+					  <div>
+						<textarea 
+						  name="speakerText" 
+						  id="speakerText" 
+						  cols="15" 
+						  rows="10"
+						  placeholder="Describí de qué se trata lo que vas a hacer"
+						  ></textarea>
+					  </div>
+					</div>
+				</div>
+			</div>
+		</aside>
+		<div id="chat">
+			<div id="chatRead"></div>
+			<div id="chatWrite">
+				<span>&gt;</span> <input type="text" placeholder="Chateá acá"/>
+			</div>
+		</div>
+	</main>
 
-    <script src="https://meet.jit.si/external_api.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="client.js"></script>
+	<script src="https://meet.jit.si/external_api.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="client.js"></script>
 </body>
 </html>
