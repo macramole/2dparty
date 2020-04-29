@@ -191,11 +191,17 @@ $userConfig
   .addEventListener('change', function (e) {
     user.isAdminOfArea = this.checked
     if (user.isAdminOfArea) {
-      $pj.classList.add('adminOfArea')
-      buildTooltip($pj)
-      // create room
-      socket.emit('createArea')
-      console.log(socket.io)
+      peopleNear = getPeopleNear()
+
+      if (canCreateRoom(peopleNear)) {
+        $pj.classList.add('adminOfArea')
+        buildTooltip($pj)
+        // create room
+        socket.emit('createArea')
+      } else {
+        console.log('ya hay un admin en este área')
+        e.target.checked = false
+      }
     } else {
       //destroy room
       socket.emit('destroyArea')
@@ -234,6 +240,34 @@ function buildTooltip(node) {
   node.addEventListener('mouseleave', function (e) {
     document.querySelector('.tooltip').remove()
   })
+}
+
+function getPeopleNear() {
+  var nodes = document.querySelectorAll('.pj')
+  var near = []
+  var mainPjPos = { x: parseInt($pj.style.left), y: parseInt($pj.style.top) }
+
+  for (let usr of Array.from(nodes)) {
+    if (usr === $pj) continue
+    let usrPos = { x: parseInt(usr.style.left), y: parseInt(usr.style.top) }
+
+    dx = Math.abs(mainPjPos.x - usrPos.x)
+    dy = Math.abs(mainPjPos.y - usrPos.y)
+
+    if (dx <= 25 && dy <= 25) {
+      near.push(usr)
+    }
+  }
+  return near
+}
+
+function canCreateRoom(nearbyUsrs) {
+  for (usr of nearbyUsrs) {
+    if (Array.from(usr.classList).indexOf('adminOfArea') !== -1) {
+      return false
+    }
+  }
+  return true
 }
 
 /////////////////////////////////////////
@@ -325,10 +359,14 @@ socket.on('user disconnected', (id) => {
 
 socket.on('newAdminOfArea', (id) => {
   let $friend = document.querySelector(`.pj[data-id="${id}"]`)
-  $friend.classList.add('adminOfArea')
+  if ($friend) {
+    $friend.classList.add('adminOfArea')
+  }
 })
 
 socket.on('removeAdminOfArea', (id) => {
   let $friend = document.querySelector(`.pj[data-id="${id}"]`)
-  $friend.classList.remove('adminOfArea')
+  if ($friend) {
+    $friend.classList.remove('adminOfArea')
+  }
 })
