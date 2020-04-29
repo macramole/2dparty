@@ -322,3 +322,13 @@ socket.on('user disconnected', (id) => {
     $friend.remove()
   }
 })
+
+socket.on('newAdminOfArea', (id) => {
+  let $friend = document.querySelector(`.pj[data-id="${id}"]`)
+  $friend.classList.add('adminOfArea')
+})
+
+socket.on('removeAdminOfArea', (id) => {
+  let $friend = document.querySelector(`.pj[data-id="${id}"]`)
+  $friend.classList.remove('adminOfArea')
+})

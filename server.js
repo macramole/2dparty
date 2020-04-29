@@ -154,14 +154,26 @@ io.on('connection', function (socket) {
     let callID = makeCallID()
     users[socket.id].callID = callID
     socket.join(callID)
+    socket.broadcast.emit('newAdminOfArea', socket.id)
     console.log('created room with id', callID)
   })
 
   socket.on('destroyArea', function () {
-    /*
-    socket.leave(users[socket.id].callID)
-    console.log('destroyed room', socket.id)
-    */
+    //Destruyo el room sólo cuando se va el último user
+    // Que pasa si un adminOfArea se va del room? (por ahora nada)
+    socket.broadcast.emit('removeAdminOfArea', socket.id)
+    var destroyRoom = true
+    for (let userID in users) {
+      if (userID !== socket.id) {
+        if (users[userID].callID === socket.id) {
+          destroyRoom = false
+        }
+      }
+    }
+    if (destroyRoom) {
+      socket.leave(users[socket.id].callID)
+      console.log('destroyed room', socket.id)
+    }
   })
 
   for (let userID in users) {
