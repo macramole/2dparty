@@ -154,8 +154,10 @@ io.on('connection', function (socket) {
   socket.on('createArea', function () {
     //creo un call id para identificar el room. Se usará para futuras llamadas
     socket.broadcast.emit('newAdminOfArea', socket.id)
-    let callID = makeCallID()
-    users[socket.id].callID = callID
+    if (!users[socket.id].callID) {
+      let callID = makeCallID()
+      users[socket.id].callID = callID
+    }
     socket.join(callID)
     console.log('created room with id', callID)
   })

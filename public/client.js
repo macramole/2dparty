@@ -191,7 +191,7 @@ $userConfig
   .addEventListener('change', function (e) {
     user.isAdminOfArea = this.checked
     if (user.isAdminOfArea) {
-      peopleNear = getPeopleNear()
+      var peopleNear = getPeopleNear()
 
       if (canCreateRoom(peopleNear)) {
         $pj.classList.add('adminOfArea')
