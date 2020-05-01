@@ -314,17 +314,17 @@ socket.on('chat', (chatMessage) => {
   }
 })
 
-socket.on('start call', (options) => {
-  console.log('start call', options.callID)
+socket.on('start call', (callOptions) => {
+  console.log('start call', callOptions.callID)
 
-  user.atArea = options.callID
+  user.atArea = callOptions.callID
 
   if (!user.chat[user.atArea]) {
     user.chat[user.atArea] = []
   }
 
   const options = {
-    roomName: options.callID,
+    roomName: callOptions.callID,
     width: window.innerWidth * 0.45,
     height: window.innerHeight * 0.54,
     parentNode: $meet,
