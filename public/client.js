@@ -9,6 +9,7 @@ let $login = document.querySelector('#login')
 let $btnLogin = document.querySelector('#btnLogin')
 let $txtNombre = document.querySelector('#txtNombre')
 let $info = document.querySelector('#info')
+let $btnConfig = document.querySelector('#showConfig')
 let $userConfig = document.querySelector('#userConfig')
 let $meet = document.querySelector('#meet')
 
@@ -161,6 +162,7 @@ $btnLogin.addEventListener('click', (ev) => {
   $pj.style.top = roomPaddingTop + 'px'
   $login.style.display = 'none'
   $info.style.display = 'block'
+  $btnConfig.classList.remove('hide')
   $chatWrite.focus()
 
   user.joinedWorld = true

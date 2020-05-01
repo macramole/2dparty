@@ -142,6 +142,10 @@ main {
   display: none;
 }
 
+#userConfig #showConfig.hide {
+  display: none;
+}
+
 #userConfig #showConfig {
   position: absolute;
   bottom: 8px;
