@@ -34,23 +34,24 @@ function makeCallID() {
   return result
 }
 
-function startCall(to, callID, options = {} ) {
-	if ( callID == null ) {
-		callID = makeCallID()
-	}
-	io.sockets.sockets[to].join(callID)
-	users[to].callID = callID
-	
-	options.callID = callID
-	io.to(to).emit('start call', options)
+function startCall(to, callID, options = {}) {
+  if (callID == null) {
+    callID = makeCallID()
+  }
+  io.sockets.sockets[to].join(callID)
+  users[to].callID = callID
 
-	return callID
+  options.callID = callID
+
+  io.to(to).emit('start call', options)
+
+  return callID
 }
 
 function endCall(to) {
-    io.to(to).emit('end call')
-	io.sockets.sockets[to].leave(users[to].callID)
-	users[to].callID = null
+  io.to(to).emit('end call')
+  io.sockets.sockets[to].leave(users[to].callID)
+  users[to].callID = null
 }
 
 function getPeopleNear(userID) {
@@ -89,7 +90,7 @@ function checkLeftAlone(userID) {
   for (let uid in users) {
     let u = users[uid]
     if (u.id == userID) continue
-	if (u.isAdminOfArea) break //si hay un admin ya fue no se rompe nunca, puede estar solo el admin
+    if (u.isAdminOfArea) break //si hay un admin ya fue no se rompe nunca, puede estar solo el admin
     if (u.callID == cUser.callID) {
       if (oneFriend == null) {
         oneFriend = u.id
@@ -117,9 +118,9 @@ function checkNeedCall(userID) {
   if (nearUsers.length == 0) {
     if (cUser.callID) {
       // si estaba en una llamada y se fue
-	  //(acá deliberadamente no llamo a endCall)
+      //(acá deliberadamente no llamo a endCall)
       checkLeftAlone(cUser.id)
-	  endCall(cUser.id)
+      endCall(cUser.id)
     }
   } else {
     //si hay alguien cerca
@@ -154,41 +155,58 @@ io.on('connection', function (socket) {
   console.log(`user connected: ${socket.id}`)
 
   for (let userID in users) {
-      if (users[userID].pos) {
-          let pos = {
-              x: users[userID].pos.x,
-              y: users[userID].pos.y,
-              id: userID,
-              name: users[userID].name ? users[userID].name.substr(0, 2) : 'pa',
-          }
-          socket.emit('position', pos)
+    if (users[userID].pos) {
+      let pos = {
+        x: users[userID].pos.x,
+        y: users[userID].pos.y,
+        id: userID,
+        name: users[userID].name ? users[userID].name.substr(0, 2) : 'pa',
       }
+      socket.emit('position', pos)
+    }
+
+    if (users[userID].areaDescription) {
+      console.log('sending data to users...')
+      socket.emit('newAdminOfArea', {
+        id: userID,
+        areaDescription: users[userID].areaDescription,
+      })
+    }
   }
 
   users[socket.id] = {
-      id: socket.id,
-      isAdminOfArea: false,
-      pos: null,
-      callID: null, //esto es el nombre del room en el que está también
+    id: socket.id,
+    isAdminOfArea: false,
+    pos: null,
+    callID: null, //esto es el nombre del room en el que está también
   }
   let user = users[socket.id]
 
   // ROOMS
-  socket.on('createArea', function () {
-    //creo un call id para identificar el room. Se usará para futuras llamadas
-    socket.broadcast.emit('newAdminOfArea', socket.id) //acá habria que pasar el texto ??
-    if ( users[socket.id].callID ) {
-		endCall( users[socket.id].callID )
+  socket.on('createArea', function (opts) {
+    socket.broadcast.emit('newAdminOfArea', {
+      id: socket.id,
+      areaDescription: opts.areaDescription,
+    }) //acá habria que pasar el texto. y si el user entra después de que el admin la creó??
+    // guardo la descripción
+    users[socket.id].areaDescription = opts.areaDescription
+
+    if (users[socket.id].callID) {
+      endCall(users[socket.id].callID)
     }
 
-	let callID = startCall(socket.id, callID, { mic : false, video : false } )
+    let callID = startCall(socket.id, null, {
+      mic: opts.allowMics,
+      video: opts.allowCams,
+    })
+
     console.log('created room with id', callID)
   })
 
   socket.on('destroyArea', function () {
     //Destruyo el room sólo cuando se va el último user
     // Que pasa si un adminOfArea se va del room? (por ahora nada con el room)
-	// TODO: acá habria que hacer que heche a todos
+    // TODO: acá habria que hacer que heche a todos
     socket.broadcast.emit('removeAdminOfArea', socket.id)
     var destroyRoom = true
     for (let userID in users) {
@@ -203,7 +221,6 @@ io.on('connection', function (socket) {
       console.log('destroyed room', socket.id)
     }
   })
-
 
   socket.on('set name', (name) => {
     user.name = name

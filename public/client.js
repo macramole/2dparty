@@ -193,11 +193,11 @@ $userConfig
     if (user.isAdminOfArea) {
       var peopleNear = getPeopleNear()
 
-      if (canCreateRoom(peopleNear)) {
+      if (canCreateArea(peopleNear)) {
         $pj.classList.add('adminOfArea')
-        buildTooltip($pj)
-        // create room
-        socket.emit('createArea')
+        createArea()
+        $pj.dataset.id = socket.id
+        buildTooltip($pj, user.areaDescription)
       } else {
         console.log('ya hay un admin en este área')
         e.target.checked = false
@@ -209,36 +209,26 @@ $userConfig
     }
   })
 
-$userConfig
-  .querySelector('#speakerText')
-  .addEventListener('blur', function (e) {
-    var text = e.target.value.trim()
+function buildTooltip(node, text) {
+  var tooltip = document.createElement('div')
+  tooltip.className = 'tooltip'
+  tooltip.id = node.dataset.id
 
-    if (text.length === 0) {
-      $userConfig.querySelector('#speakerText').style.border = '1px solid black'
-    } else if (user.areaDescription === '') {
-      $userConfig.querySelector('#speakerText').style.border = '2px solid red'
-    }
-    user.areaDescription = text
-  })
-
-function buildTooltip(node) {
-  var toolTip = document.createElement('div')
-  toolTip.className = 'tooltip'
+  console.log(node.dataset)
 
   node.addEventListener('mouseover', function (e) {
-    var tltp = document.querySelector('.tooltip')
+    var tltp = document.querySelector(`#${tooltip.id}.tooltip`)
     if (tltp) {
       tltp.remove()
     }
-    toolTip.innerHTML = user.areaDescription
-    toolTip.style.left = `${parseInt($pj.style.left) + 40}px`
-    toolTip.style.top = `${parseInt($pj.style.top) - 20}px`
-    node.before(toolTip)
+    tooltip.innerHTML = text //user.areaDescription
+    tooltip.style.left = `${parseInt(node.style.left) + 40}px`
+    tooltip.style.top = `${parseInt(node.style.top) - 20}px`
+    node.before(tooltip)
   })
 
   node.addEventListener('mouseleave', function (e) {
-    document.querySelector('.tooltip').remove()
+    document.querySelector(`#${tooltip.id}.tooltip`).remove()
   })
 }
 
@@ -261,13 +251,32 @@ function getPeopleNear() {
   return near
 }
 
-function canCreateRoom(nearbyUsrs) {
+function canCreateArea(nearbyUsrs) {
   for (usr of nearbyUsrs) {
     if (Array.from(usr.classList).indexOf('adminOfArea') !== -1) {
       return false
     }
   }
   return true
+}
+
+function createArea() {
+  var allowCams = $userConfig.querySelector('#allowMics').checked
+  var allowMics = $userConfig.querySelector('#allowCams').checked
+  var areaDescription =
+    $userConfig.querySelector('#areaDescription').value || '???'
+
+  var opts = {
+    allowCams,
+    allowMics,
+    areaDescription,
+  }
+
+  user.areaDescription = areaDescription
+
+  console.log('opts', opts.allowMics, opts.allowCams)
+
+  socket.emit('createArea', opts)
 }
 
 /////////////////////////////////////////
@@ -357,11 +366,13 @@ socket.on('user disconnected', (id) => {
   }
 })
 
-socket.on('newAdminOfArea', (id) => {
-  let $friend = document.querySelector(`.pj[data-id="${id}"]`)
+socket.on('newAdminOfArea', (opts) => {
+  let $friend = document.querySelector(`.pj[data-id="${opts.id}"]`)
   if ($friend) {
     $friend.classList.add('adminOfArea')
   }
+  buildTooltip($friend, opts.areaDescription)
+  //opts.areaDescription
 })
 
 socket.on('removeAdminOfArea', (id) => {
