@@ -39,6 +39,8 @@ function startCall(to, callID, options = {} ) {
 		callID = makeCallID()
 	}
 	io.sockets.sockets[to].join(callID)
+	users[to].callID = callID
+	
 	options.callID = callID
 	io.to(to).emit('start call', options)
 
