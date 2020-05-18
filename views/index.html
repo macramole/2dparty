@@ -7,6 +7,39 @@
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header>
+    <h1> 2dparty </h1>
+    <nav>
+      <!--button id="btnSerParlante" class='button'> configuración </button-->
+      <div id="serParlanteWrapper">
+        <button id="btnSerParlante" class="button hide"><!--i class="fas fa-podcast"></i-->configuración</button>
+
+        <div id="serParlanteWindow" class="hide">
+          <p>Pensar texto para explicar esto y que debería ser más o menos de este tamaño diría yo esperemos</p>
+
+          <p class="permitir">Permitir que los visitantes usen:</p>
+          <div class="allowables">
+            <div>
+              <input type="checkbox" name="allowMics" id="allowMics">
+              <label for="allowMics"><i class="fas fa-microphone-alt"></i> Micrófono</label>
+            </div>
+            <div>
+              <input type="checkbox" name="allowCams" id="allowCams" checked="checked">
+              <label for="allowCams"><i class="fas fa-video"></i> Cámara</label>
+            </div>
+          </div>
+
+          <textarea
+            id="areaDescription"
+            placeholder="¿De qué se trata lo que vas a hacer?"
+            ></textarea>
+
+          <button id="btnIsAdminOfArea" class="button" type="button">Inaugurar Área</button>
+        </div>
+        </div>
+      <button class='button'> acerca de </button>
+    </nav>
+  </header>
 	<main>
 		<div id="room">
 			<div id="pjPrincipal" class="pj"></div>
@@ -24,32 +57,6 @@
 						<li><i class="fas fa-comments"></i> <span>Acercate a alguien para hablarle</span></li>
 					</ul>
 				</div>
-				<div id="serParlanteWrapper">
-					<button id="btnSerParlante" class="hide"><i class="fas fa-podcast"></i></button>
-
-					<div id="serParlanteWindow" class="hide">
-						<p>Pensar texto para explicar esto y que debería ser más o menos de este tamaño diría yo esperemos</p>
-
-						<p class="permitir">Permitir que los visitantes usen:</p>
-						<div class="allowables">
-							<div>
-								<input type="checkbox" name="allowMics" id="allowMics">
-								<label for="allowMics"><i class="fas fa-microphone-alt"></i> Micrófono</label>
-							</div>
-							<div>
-								<input type="checkbox" name="allowCams" id="allowCams" checked="checked">
-								<label for="allowCams"><i class="fas fa-video"></i> Cámara</label>
-							</div>
-						</div>
-
-						<textarea
-						  id="areaDescription"
-						  placeholder="¿De qué se trata lo que vas a hacer?"
-						  ></textarea>
-
-						<button id="btnIsAdminOfArea" class="button" type="button">Inaugurar Área</button>
-					</div>
-			    </div>
 			</div>
 		</aside>
 		<div id="chat">
