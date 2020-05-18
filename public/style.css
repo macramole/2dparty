@@ -40,7 +40,7 @@ main {
 }
 
 #infoBeforeMeet img {
-  width: 37%;
+  width: 35%;
 }
 
 #info {
@@ -50,7 +50,7 @@ main {
 #info ul {
 	list-style: none;
 	font-size: 0.9em;
-	width: 31%;
+	width: 29%;
 	margin: 0 auto;
 	padding: 1em;
 	border-radius: 3px;
@@ -123,12 +123,10 @@ main {
 #infoBeforeMeet {
   background-color: white;
   height: 100%;
-  /* width: 80%; */
-  /* margin: 7% auto; */
   text-align: center;
   box-sizing: border-box;
   padding-top: 2em;
-  border: 50px solid #d8bfdd;
+  border: 1vw solid #d8bfdd;
 }
 
 #login {
@@ -161,8 +159,8 @@ main {
 
 #serParlanteWrapper {
 	position: absolute;
-	right: 9%;
-	bottom: 13%;
+	right: 5%;
+	bottom: 6%;
 	width: 32%;
 	text-align: left;
 }
