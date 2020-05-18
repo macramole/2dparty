@@ -55,12 +55,13 @@ header nav {
   background: none;
   border: none;
   font-size: 1.5em;
-  transition: text-shadow 0.25s;
+  cursor: pointer;
+  /* transition: text-shadow 0.25s; */
 }
 
-.iconButton:hover {
+/* .iconButton:hover {
   text-shadow: 2px 2px 2px #80ffc1;
-}
+} */
 
 #pjPrincipal {
   visibility: hidden;
@@ -222,16 +223,22 @@ main {
 */
 
 #serParlanteWindow {
-  position: absolute;
-  top: 100%;
-  background: white;
-  padding: 5% 7% 7% 7%;
-  border-radius: 9px;
-  border-bottom-right-radius: 0;
-  box-shadow: 4px 4px #8a8a8a;
-  border: 1px solid #8a8a8a;
-  font-size: 0.9em;
-  z-index: 2;
+	position: absolute;
+	top: 100%;
+	background: white;
+	border-radius: 5px;
+	box-shadow: 2px 3px #c8c4c4ad;
+	border: 1px solid #8a8a8a;
+	font-size: 0.9em;
+	z-index: 2;
+	width: 25%;
+	padding: 2%;
+}
+
+#btnIsAdminOfArea {
+    width: 65%;
+    margin: 1em auto 0;
+    display: block;
 }
 
 #serParlanteWindow::before {
