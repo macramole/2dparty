@@ -36,7 +36,7 @@ let showingConfig = false
 //esto hay que calcularlo en base a la resolución
 let tileSize = 0
 const gridSizeX = 40
-const gridSizeY = 36
+const gridSizeY = 6
 //////
 
 let currentX = 0
@@ -46,25 +46,25 @@ const roomPaddingBottom = 0 //absoluto
 const roomPaddingRight = 0.55 //porcentaje
 
 function moveAllPJsToCoords() {
-    let $pjs = document.querySelectorAll('.pj')
+  let $pjs = document.querySelectorAll('.pj')
 
-    for ( let i = 0 ; i < $pjs.length ; i++ ) {
-        let $pj = $pjs[i]
-        $pj.style.left = (parseInt($pj.dataset.x) * tileSize) + 'px'
-        $pj.style.top = (parseInt($pj.dataset.y) * tileSize) + 'px'
-    }
+  for (let i = 0; i < $pjs.length; i++) {
+    let $pj = $pjs[i]
+    $pj.style.left = parseInt($pj.dataset.x) * tileSize + 'px'
+    $pj.style.top = parseInt($pj.dataset.y) * tileSize + 'px'
+  }
 }
 
 function movePJtoCurrentCoords() {
-    $pj.style.left = (currentX * tileSize) + 'px'
-    $pj.style.top = (currentY * tileSize) + 'px'
+  $pj.style.left = currentX * tileSize + 'px'
+  $pj.style.top = currentY * tileSize + 'px'
 }
 
 function updatePos(x, y) {
-    currentX = x
-    currentY = y
-    movePJtoCurrentCoords()
-    sendPos()
+  currentX = x
+  currentY = y
+  movePJtoCurrentCoords()
+  sendPos()
 }
 
 function sendPos() {
@@ -75,13 +75,13 @@ function sendPos() {
 }
 
 function setSizes() {
-    tileSize = window.innerWidth * 0.013 // si se cambia el multiplicador hay que cambiarlo del CSS
+  tileSize = window.innerWidth * 0.013 // si se cambia el multiplicador hay que cambiarlo del CSS
 
-    let $pjs = document.querySelectorAll('.pj')
-    for ( let i = 0 ; i < $pjs.length ; i++ ) {
-        let $pj = $pjs[i]
-        $pj.style.height = getComputedStyle($pj).width //cuadrado forever
-    }
+  let $pjs = document.querySelectorAll('.pj')
+  for (let i = 0; i < $pjs.length; i++) {
+    let $pj = $pjs[i]
+    $pj.style.height = getComputedStyle($pj).width //cuadrado forever
+  }
 }
 
 function isPositionEmpty(x, y) {
@@ -91,7 +91,7 @@ function isPositionEmpty(x, y) {
   if (x > gridSizeX) {
     return false
   }
-  if ( y > gridSizeY ) {
+  if (y > gridSizeY) {
     return false
   }
 
@@ -111,7 +111,7 @@ function isPositionEmpty(x, y) {
 }
 
 window.addEventListener('load', (ev) => {
-  window.dispatchEvent(new Event('resize'));
+  window.dispatchEvent(new Event('resize'))
   $txtNombre.focus()
 })
 
@@ -148,7 +148,7 @@ window.addEventListener('keydown', (ev) => {
     }
 
     if (isPositionEmpty(x, y)) {
-      updatePos(x,y)
+      updatePos(x, y)
     }
 
     ev.preventDefault()
@@ -204,16 +204,17 @@ $btnLogin.addEventListener('click', (ev) => {
 })
 
 // Oculto o muestro la config
-$btnSerParlante
-  .addEventListener('click', function (e) {
-    let $serParlanteWindow = $serParlanteWrapper.querySelector('#serParlanteWindow')
-    showingConfig
-      ? $serParlanteWindow.classList.add('hide')
-      : $serParlanteWindow.classList.remove('hide')
+$btnSerParlante.addEventListener('click', function (e) {
+  let $serParlanteWindow = $serParlanteWrapper.querySelector(
+    '#serParlanteWindow'
+  )
+  showingConfig
+    ? $serParlanteWindow.classList.add('hide')
+    : $serParlanteWindow.classList.remove('hide')
 
-    showingConfig = !showingConfig
-    e.stopPropagation()
-  })
+  showingConfig = !showingConfig
+  e.stopPropagation()
+})
 
 //Para que no se cierre la ventana de click cuando clickeo en ella
 $serParlanteWrapper
@@ -234,17 +235,16 @@ $serParlanteWrapper
         createArea()
         $pj.dataset.id = socket.id
         buildTooltip($pj, user.areaDescription)
-        this.innerHTML = "Dejar Área"
+        this.innerHTML = 'Dejar Área'
       } else {
         alert('No se puede crear el área acá.')
-
       }
     } else {
       //destroy room
       socket.emit('destroyArea')
       $pj.classList.remove('adminOfArea')
 
-      this.innerHTML = "Inaugurar área"
+      this.innerHTML = 'Inaugurar área'
     }
   })
 
@@ -303,12 +303,12 @@ function createArea() {
   let allowCams = $serParlanteWrapper.querySelector('#allowMics').checked
   let allowMics = $serParlanteWrapper.querySelector('#allowCams').checked
   let areaDescription =
-    $serParlanteWrapper.querySelector('#areaDescription').value || ""
+    $serParlanteWrapper.querySelector('#areaDescription').value || ''
 
   let opts = {
-    "allowCams" : allowCams,
-    "allowMics" : allowMics,
-    "areaDescription" : areaDescription,
+    allowCams: allowCams,
+    allowMics: allowMics,
+    areaDescription: areaDescription,
   }
 
   socket.emit('createArea', opts)
@@ -335,8 +335,8 @@ socket.on('position', (pos) => {
 
   $friend.dataset.x = pos.x
   $friend.dataset.y = pos.y
-  $friend.style.left = (pos.x * tileSize) + 'px'
-  $friend.style.top = (pos.y * tileSize) + 'px'
+  $friend.style.left = pos.x * tileSize + 'px'
+  $friend.style.top = pos.y * tileSize + 'px'
 })
 
 socket.on('chat', (chatMessage) => {

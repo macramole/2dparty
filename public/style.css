@@ -51,6 +51,17 @@ header nav {
   background-color: #1aa4c4;
 }
 
+.iconButton {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  transition: text-shadow 0.25s;
+}
+
+.iconButton:hover {
+  text-shadow: 2px 2px 2px #80ffc1;
+}
+
 #pjPrincipal {
   visibility: hidden;
 }
