@@ -9,13 +9,14 @@ let $login = document.querySelector('#login')
 let $btnLogin = document.querySelector('#btnLogin')
 let $txtNombre = document.querySelector('#txtNombre')
 let $info = document.querySelector('#info')
-let $userConfig = document.querySelector('#userConfig')
+let $btnSerParlante = document.querySelector('#btnSerParlante')
+let $serParlanteWrapper = document.querySelector('#serParlanteWrapper')
 let $meet = document.querySelector('#meet')
 
 let jitsiAPI = null
 const jitsidomain = 'meet.jit.si'
 
-const AREA_WORLD = "world"
+const AREA_WORLD = 'world'
 
 let user = {
   nombre: '',
@@ -30,33 +31,67 @@ user.chat[AREA_WORLD] = []
 
 let nombre
 let started = false
+let showingConfig = false
 
-const speed = 25 //esto hay que cambiar en el servidor y en el cliente !!
+//esto hay que calcularlo en base a la resolución
+let tileSize = 0
+const gridSizeX = 40
+const gridSizeY = 36
+//////
+
+let currentX = 0
+let currentY = 0
 const roomPaddingTop = 0 //absoluto
 const roomPaddingBottom = 0 //absoluto
 const roomPaddingRight = 0.55 //porcentaje
 
-function sendPos() {
-  let x = parseInt($pj.style.left)
-  let y = parseInt($pj.style.top)
+function moveAllPJsToCoords() {
+    let $pjs = document.querySelectorAll('.pj')
 
+    for ( let i = 0 ; i < $pjs.length ; i++ ) {
+        let $pj = $pjs[i]
+        $pj.style.left = (parseInt($pj.dataset.x) * tileSize) + 'px'
+        $pj.style.top = (parseInt($pj.dataset.y) * tileSize) + 'px'
+    }
+}
+
+function movePJtoCurrentCoords() {
+    $pj.style.left = (currentX * tileSize) + 'px'
+    $pj.style.top = (currentY * tileSize) + 'px'
+}
+
+function updatePos(x, y) {
+    currentX = x
+    currentY = y
+    movePJtoCurrentCoords()
+    sendPos()
+}
+
+function sendPos() {
   socket.emit('position', {
-    x: x,
-    y: y,
+    x: currentX,
+    y: currentY,
   })
 }
 
+function setSizes() {
+    tileSize = window.innerWidth * 0.013 // si se cambia el multiplicador hay que cambiarlo del CSS
+
+    let $pjs = document.querySelectorAll('.pj')
+    for ( let i = 0 ; i < $pjs.length ; i++ ) {
+        let $pj = $pjs[i]
+        $pj.style.height = getComputedStyle($pj).width //cuadrado forever
+    }
+}
+
 function isPositionEmpty(x, y) {
-  if (x < 0 || y < roomPaddingTop) {
+  if (x < 0 || y < 0) {
     return false
   }
-  if (x > parseInt(getComputedStyle($room).width) * roomPaddingRight - speed) {
+  if (x > gridSizeX) {
     return false
   }
-  if (
-    y >
-    parseInt(getComputedStyle($room).height) - roomPaddingBottom - speed
-  ) {
+  if ( y > gridSizeY ) {
     return false
   }
 
@@ -64,8 +99,8 @@ function isPositionEmpty(x, y) {
 
   for (let i = 0; i < $pjs.length; i++) {
     let $pj = $pjs[i]
-    let pjX = parseInt($pj.style.left)
-    let pjY = parseInt($pj.style.top)
+    let pjX = $pj.dataset.x
+    let pjY = $pj.dataset.y
 
     if (pjX == x && pjY == y) {
       return false
@@ -76,11 +111,15 @@ function isPositionEmpty(x, y) {
 }
 
 window.addEventListener('load', (ev) => {
-  $pj.style.left = '10px'
-  $pj.style.top = '10px'
-
-  $room.style.height = window.innerHeight + 'px'
+  window.dispatchEvent(new Event('resize'));
   $txtNombre.focus()
+})
+
+window.addEventListener('resize', (ev) => {
+  $room.style.height = window.innerHeight + 'px'
+  setSizes()
+  movePJtoCurrentCoords()
+  moveAllPJsToCoords()
 })
 
 window.addEventListener('keydown', (ev) => {
@@ -90,36 +129,42 @@ window.addEventListener('keydown', (ev) => {
     ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(ev.key) != -1 &&
     !user.isAdminOfArea
   ) {
-    let x = parseInt($pj.style.left)
-    let y = parseInt($pj.style.top)
+    let x = currentX
+    let y = currentY
 
     switch (ev.key) {
       case 'ArrowUp':
-        y -= speed
+        y -= 1
         break
       case 'ArrowDown':
-        y += speed
+        y += 1
         break
       case 'ArrowLeft':
-        x -= speed
+        x -= 1
         break
       case 'ArrowRight':
-        x += speed
+        x += 1
         break
     }
 
     if (isPositionEmpty(x, y)) {
-      $pj.style.left = `${x}px`
-      $pj.style.top = `${y}px`
-      sendPos()
+      updatePos(x,y)
     }
 
     ev.preventDefault()
   }
 })
 
-$room.addEventListener("click", ev => {
-	$chatWrite.focus()
+// Para cerrar la config si clickeo afuera
+window.addEventListener('click', function (e) {
+  if (showingConfig) {
+    document.querySelector('#serParlanteWindow').classList.add('hide')
+    showingConfig = false
+  }
+})
+
+$room.addEventListener('click', (ev) => {
+  $chatWrite.focus()
 })
 
 $chatWrite.addEventListener('keydown', (ev) => {
@@ -140,11 +185,11 @@ $txtNombre.addEventListener('keydown', (ev) => {
 })
 
 $btnLogin.addEventListener('click', (ev) => {
-  var n = document.querySelector('#txtNombre').value
+  let n = document.querySelector('#txtNombre').value
   if (n == '') {
-    n = 'xx'
+    n = '?'
   }
-  $pj.innerHTML = n.substr(0, 2)
+  $pj.innerHTML = n.substr(0, 1)
   user.nombre = n
 
   socket.emit('set name', user.nombre)
@@ -152,54 +197,121 @@ $btnLogin.addEventListener('click', (ev) => {
   $pj.style.top = roomPaddingTop + 'px'
   $login.style.display = 'none'
   $info.style.display = 'block'
+  $btnSerParlante.classList.remove('hide')
   $chatWrite.focus()
 
   user.joinedWorld = true
 })
 
-$userConfig
-  .querySelector('#isAdminOfArea')
-  .addEventListener('change', function (e) {
-    user.isAdminOfArea = this.checked
+// Oculto o muestro la config
+$btnSerParlante
+  .addEventListener('click', function (e) {
+    let $serParlanteWindow = $serParlanteWrapper.querySelector('#serParlanteWindow')
+    showingConfig
+      ? $serParlanteWindow.classList.add('hide')
+      : $serParlanteWindow.classList.remove('hide')
+
+    showingConfig = !showingConfig
+    e.stopPropagation()
+  })
+
+//Para que no se cierre la ventana de click cuando clickeo en ella
+$serParlanteWrapper
+  .querySelector('#serParlanteWindow')
+  .addEventListener('click', function (e) {
+    e.stopPropagation()
+  })
+
+$serParlanteWrapper
+  .querySelector('#btnIsAdminOfArea')
+  .addEventListener('click', function (e) {
+    user.isAdminOfArea = !user.isAdminOfArea
     if (user.isAdminOfArea) {
-      $pj.classList.add('adminOfArea')
-      buildTooltip($pj)
+      var peopleNear = getPeopleNear()
+
+      if (canCreateArea(peopleNear)) {
+        $pj.classList.add('adminOfArea')
+        createArea()
+        $pj.dataset.id = socket.id
+        buildTooltip($pj, user.areaDescription)
+        this.innerHTML = "Dejar Área"
+      } else {
+        alert('No se puede crear el área acá.')
+
+      }
     } else {
+      //destroy room
+      socket.emit('destroyArea')
       $pj.classList.remove('adminOfArea')
+
+      this.innerHTML = "Inaugurar área"
     }
   })
 
-$userConfig
-  .querySelector('#speakerText')
-  .addEventListener('blur', function (e) {
-    var text = e.target.value.trim()
+function buildTooltip(node, text) {
+  var tooltip = document.createElement('div')
+  tooltip.className = 'tooltip'
+  tooltip.id = node.dataset.id
 
-    if (text.length === 0) {
-      $userConfig.querySelector('#speakerText').style.border = '1px solid black'
-    } else if (user.areaDescription === '') {
-      $userConfig.querySelector('#speakerText').style.border = '2px solid red'
-    }
-    user.areaDescription = text
-  })
-
-function buildTooltip(node) {
-  var tltp = document.querySelector('.tooltip')
-  if (tltp) {
-    tltp.remove()
-  }
-  var toolTip = document.createElement('div')
-  toolTip.className = 'tooltip'
+  console.log(node.dataset)
 
   node.addEventListener('mouseover', function (e) {
-    toolTip.innerHTML = user.areaDescription
-    toolTip.style.left = `${parseInt($pj.style.left) + 40}px`
-    toolTip.style.top = `${parseInt($pj.style.top) - 20}px`
-    node.before(toolTip)
+    var tltp = document.querySelector(`#${tooltip.id}.tooltip`)
+    if (tltp) {
+      tltp.remove()
+    }
+    tooltip.innerHTML = text //user.areaDescription
+    tooltip.style.left = `${parseInt(node.style.left) + 40}px`
+    tooltip.style.top = `${parseInt(node.style.top) - 20}px`
+    node.before(tooltip)
   })
 
   node.addEventListener('mouseleave', function (e) {
-    document.querySelector('.tooltip').remove()
+    document.querySelector(`#${tooltip.id}.tooltip`).remove()
   })
+}
+
+function getPeopleNear() {
+  var nodes = document.querySelectorAll('.pj')
+  var near = []
+  var mainPjPos = { x: currentX, y: currentY }
+
+  for (let usr of Array.from(nodes)) {
+    if (usr === $pj) continue
+    let usrPos = { x: parseInt(usr.dataset.x), y: parseInt(usr.dataset.y) }
+
+    dx = Math.abs(mainPjPos.x - usrPos.x)
+    dy = Math.abs(mainPjPos.y - usrPos.y)
+
+    if (dx <= 1 && dy <= 1) {
+      near.push(usr)
+    }
+  }
+  return near
+}
+
+function canCreateArea(nearbyUsrs) {
+  for (usr of nearbyUsrs) {
+    if (Array.from(usr.classList).indexOf('adminOfArea') !== -1) {
+      return false
+    }
+  }
+  return true
+}
+
+function createArea() {
+  let allowCams = $serParlanteWrapper.querySelector('#allowMics').checked
+  let allowMics = $serParlanteWrapper.querySelector('#allowCams').checked
+  let areaDescription =
+    $serParlanteWrapper.querySelector('#areaDescription').value || ""
+
+  let opts = {
+    "allowCams" : allowCams,
+    "allowMics" : allowMics,
+    "areaDescription" : areaDescription,
+  }
+
+  socket.emit('createArea', opts)
 }
 
 /////////////////////////////////////////
@@ -218,15 +330,16 @@ socket.on('position', (pos) => {
     $friend.innerHTML = pos.name
 
     $room.appendChild($friend)
+    $friend.style.height = getComputedStyle($friend).width
   }
 
-  $friend.style.left = pos.x + 'px'
-  $friend.style.top = pos.y + 'px'
+  $friend.dataset.x = pos.x
+  $friend.dataset.y = pos.y
+  $friend.style.left = (pos.x * tileSize) + 'px'
+  $friend.style.top = (pos.y * tileSize) + 'px'
 })
 
 socket.on('chat', (chatMessage) => {
-//   console.log('cath', chatMessage)
-//   console.log('mag', user.atArea)
   user.chat[user.atArea].push(chatMessage)
   $chatRead.innerHTML = buildChat(user.chat[user.atArea])
   $chatRead.scrollTop = $chatRead.scrollHeight
@@ -248,17 +361,17 @@ socket.on('chat', (chatMessage) => {
   }
 })
 
-socket.on('start call', (callID) => {
-  console.log('start call', callID)
+socket.on('start call', (callOptions) => {
+  console.log('start call', callOptions.callID)
 
-  user.atArea = callID
+  user.atArea = callOptions.callID
 
   if (!user.chat[user.atArea]) {
     user.chat[user.atArea] = []
   }
 
   const options = {
-    roomName: callID,
+    roomName: callOptions.callID,
     width: window.innerWidth * 0.45,
     height: window.innerHeight * 0.54,
     parentNode: $meet,
@@ -291,3 +404,18 @@ socket.on('user disconnected', (id) => {
   }
 })
 
+socket.on('newAdminOfArea', (opts) => {
+  let $friend = document.querySelector(`.pj[data-id="${opts.id}"]`)
+  if ($friend) {
+    $friend.classList.add('adminOfArea')
+  }
+  buildTooltip($friend, opts.areaDescription)
+  //opts.areaDescription
+})
+
+socket.on('removeAdminOfArea', (id) => {
+  let $friend = document.querySelector(`.pj[data-id="${id}"]`)
+  if ($friend) {
+    $friend.classList.remove('adminOfArea')
+  }
+})
