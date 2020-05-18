@@ -13,10 +13,10 @@
 		</div>
 		<aside id="meet">
 			<div id="infoBeforeMeet">
-				<img src="2dparty.jpg" alt="">
+				<img src="2dparty.jpg" alt="Logo 2DParty">
 				<div id="login">
 					<input type="text" id="txtNombre" placeholder="Nombre"><br>
-					<button type="button" id="btnLogin">Dale</button>
+					<button type="button" class="button" id="btnLogin">Dale</button>
 				</div>
 				<div id="info">
 					<ul>
@@ -25,6 +25,32 @@
 						<li>Permisos de cámara: permitir siempre</li>
 					</ul>
 				</div>
+				<div id="serParlanteWrapper">
+					<button id="btnSerParlante" class="hide"><i class="fas fa-podcast"></i></button>
+
+					<div id="serParlanteWindow" class="hide">
+						<p>Pensar texto para explicar esto y que debería ser más o menos de este tamaño diría yo esperemos</p>
+
+						<p class="permitir">Permitir que los visitantes usen:</p>
+						<div class="allowables">
+							<div>
+								<input type="checkbox" name="allowMics" id="allowMics">
+								<label for="allowMics"><i class="fas fa-microphone-alt"></i> Micrófono</label>
+							</div>
+							<div>
+								<input type="checkbox" name="allowCams" id="allowCams" checked="checked">
+								<label for="allowCams"><i class="fas fa-video"></i> Cámara</label>
+							</div>
+						</div>
+
+						<textarea
+						  id="areaDescription"
+						  placeholder="¿De qué se trata lo que vas a hacer?"
+						  ></textarea>
+
+						<button id="btnIsAdminOfArea" class="button" type="button">Inaugurar Área</button>
+					</div>
+			    </div>
 			</div>
 		</aside>
 		<div id="chat">
@@ -33,35 +59,10 @@
 				<span>&gt;</span> <input type="text" placeholder="Chateá acá"/>
 			</div>
 		</div>
-    <div id="userConfig">
-      <button id="showConfig" class="hide"> Config</button>
-      <div id="userConfigWindow" class="hide">
-        <div>
-          <label for="isAdminOfArea">Inaugurar Área</label>
-          <input type="checkbox" name="isAdminOfArea" id="isAdminOfArea">
-        </div>
-        <div>
-          <label for="allowMics">Permitir otros mics</label>
-          <input type="checkbox" name="allowMics" id="allowMics">
-        </div>
-        <div>
-          <label for="allowCams">Permitir otras cams</label>
-          <input type="checkbox" name="allowCams" id="allowCams">
-        </div>
-        <div>
-        <textarea 
-          name="areaDescription" 
-          id="areaDescription" 
-          cols="15" 
-          rows="10"
-          placeholder="Describí de qué se trata lo que vas a hacer (otros usuarixs lo van a poder ver!)"
-          ></textarea>
-        </div>
-      </div>
-    </div>
 	</main>
 
 	<script src="https://meet.jit.si/external_api.js"></script>
+	<script src="https://kit.fontawesome.com/47fb641f90.js" crossorigin="anonymous"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="client.js"></script>
 </body>

@@ -115,15 +115,13 @@ main {
   margin-top: 6em;
   width: 80%;
   margin: 4% auto 0;
-  /* border: 1px solid #e1e1e1; */
   padding: 2em 0;
-  /* background-color: #e1e1e1; */
 }
 #login input {
   font-family: inherit;
   font-size: 1em;
 }
-#login button {
+.button {
   margin-top: 4%;
   background-color: #80ffc1;
   border: none;
@@ -134,63 +132,88 @@ main {
   cursor: pointer;
   font-size: 0.9em;
 }
-#login button:active {
+.button:active {
   position: relative;
   left: 4px;
   top: 4px;
   box-shadow: none;
 }
 
-#userConfig #userConfigWindow.hide {
+#serParlanteWrapper {
+	position: absolute;
+	right: 9%;
+	bottom: 13%;
+	width: 32%;
+	text-align: left;
+}
+
+#serParlanteWindow.hide,
+#btnSerParlante.hide {
   display: none;
 }
-
-#userConfig #showConfig.hide {
-  display: none;
+#btnSerParlante {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	cursor: pointer;
+	padding: 0;
+	margin: 0;
+	background: none;
+	border: none;
+	font-size: 1.7em;
+	z-index: 10;
 }
 
-#userConfig #showConfig {
-  position: absolute;
-  bottom: 8px;
-  right: 0;
-  background-color: #80ffc1;
-  border: none;
-  padding: 6px 27px;
-  font-size: 1.1em;
-  text-transform: uppercase;
-  box-shadow: 4px 4px #aaa;
-  cursor: pointer;
-  font-size: 0.9em;
+#serParlanteWindow {
+	position: absolute;
+	bottom: 0;
+	right: -6px;
+	background: white;
+	padding: 5% 7% 7% 7%;
+	width: 100%;
+	border-radius: 9px;
+	border-bottom-right-radius: 0;
+	box-shadow: 4px 4px #8a8a8a;
+	border: 1px solid #8a8a8a;
+    font-size: 0.9em;
+}
+#serParlanteWindow p {
+    margin: 0;
+    margin-bottom: 1em;
 }
 
-#userConfig #showConfig:active {
-  /*position: absolute;*/
-  bottom: 4px;
-  box-shadow: none;
+#serParlanteWindow p.permitir {
+	margin: 0.2em;
+	text-align: center;
+	text-transform: uppercase;
+	font-size: 0.8em;
 }
 
-#userConfig #userConfigWindow {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  bottom: 48px;
-  right: 0;
-  align-items: center;
-  background: white;
-  /*border: 2px solid black;*/
-  padding: 24px;
-  margin: 0 12px 0 12px;
+#serParlanteWindow textarea {
+	resize: none;
+	font-size: 1em;
+	font-family: inherit;
+	box-sizing: border-box;
+	padding: 7px;
+	width: 100%;
+}
+#serParlanteWindow .allowables {
+    display: flex;
+    margin-bottom: 1em;
+    padding: 0 1%;
 }
 
-#userConfigWindow > * {
-  padding: 10px 0 10px 0;
+#serParlanteWindow .allowables label {
+    position: relative;
+    top: -2px;
 }
 
-#userConfigWindow textarea {
-  resize: none;
-  font-size: 1em;
-  box-sizing: border-box;
-  padding: 20px;
+#serParlanteWindow .allowables > div {
+    flex: 1;
+	background-color: #eee5e5;
+	padding: 3px;
+	border-radius: 5px;
+    margin: 0 2%;
 }
 
 .tooltip {

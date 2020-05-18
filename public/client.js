@@ -9,8 +9,8 @@ let $login = document.querySelector('#login')
 let $btnLogin = document.querySelector('#btnLogin')
 let $txtNombre = document.querySelector('#txtNombre')
 let $info = document.querySelector('#info')
-let $btnConfig = document.querySelector('#showConfig')
-let $userConfig = document.querySelector('#userConfig')
+let $btnSerParlante = document.querySelector('#btnSerParlante')
+let $serParlanteWrapper = document.querySelector('#serParlanteWrapper')
 let $meet = document.querySelector('#meet')
 
 let jitsiAPI = null
@@ -158,7 +158,7 @@ window.addEventListener('keydown', (ev) => {
 // Para cerrar la config si clickeo afuera
 window.addEventListener('click', function (e) {
   if (showingConfig) {
-    document.querySelector('#userConfigWindow').classList.add('hide')
+    document.querySelector('#serParlanteWindow').classList.add('hide')
     showingConfig = false
   }
 })
@@ -185,7 +185,7 @@ $txtNombre.addEventListener('keydown', (ev) => {
 })
 
 $btnLogin.addEventListener('click', (ev) => {
-  var n = document.querySelector('#txtNombre').value
+  let n = document.querySelector('#txtNombre').value
   if (n == '') {
     n = '?'
   }
@@ -197,36 +197,35 @@ $btnLogin.addEventListener('click', (ev) => {
   $pj.style.top = roomPaddingTop + 'px'
   $login.style.display = 'none'
   $info.style.display = 'block'
-  $btnConfig.classList.remove('hide')
+  $btnSerParlante.classList.remove('hide')
   $chatWrite.focus()
 
   user.joinedWorld = true
 })
 
 // Oculto o muestro la config
-$userConfig
-  .querySelector('#showConfig')
+$btnSerParlante
   .addEventListener('click', function (e) {
-    var config = $userConfig.querySelector('#userConfigWindow')
+    let $serParlanteWindow = $serParlanteWrapper.querySelector('#serParlanteWindow')
     showingConfig
-      ? config.classList.add('hide')
-      : config.classList.remove('hide')
+      ? $serParlanteWindow.classList.add('hide')
+      : $serParlanteWindow.classList.remove('hide')
 
     showingConfig = !showingConfig
     e.stopPropagation()
   })
 
 //Para que no se cierre la ventana de click cuando clickeo en ella
-$userConfig
-  .querySelector('#userConfigWindow')
+$serParlanteWrapper
+  .querySelector('#serParlanteWindow')
   .addEventListener('click', function (e) {
     e.stopPropagation()
   })
 
-$userConfig
-  .querySelector('#isAdminOfArea')
-  .addEventListener('change', function (e) {
-    user.isAdminOfArea = this.checked
+$serParlanteWrapper
+  .querySelector('#btnIsAdminOfArea')
+  .addEventListener('click', function (e) {
+    user.isAdminOfArea = !user.isAdminOfArea
     if (user.isAdminOfArea) {
       var peopleNear = getPeopleNear()
 
@@ -235,14 +234,17 @@ $userConfig
         createArea()
         $pj.dataset.id = socket.id
         buildTooltip($pj, user.areaDescription)
+        this.innerHTML = "Dejar Área"
       } else {
-        console.log('ya hay un admin en este área')
-        e.target.checked = false
+        alert('No se puede crear el área acá.')
+
       }
     } else {
       //destroy room
       socket.emit('destroyArea')
       $pj.classList.remove('adminOfArea')
+
+      this.innerHTML = "Inaugurar área"
     }
   })
 
@@ -298,20 +300,16 @@ function canCreateArea(nearbyUsrs) {
 }
 
 function createArea() {
-  var allowCams = $userConfig.querySelector('#allowMics').checked
-  var allowMics = $userConfig.querySelector('#allowCams').checked
-  var areaDescription =
-    $userConfig.querySelector('#areaDescription').value || '???'
+  let allowCams = $serParlanteWrapper.querySelector('#allowMics').checked
+  let allowMics = $serParlanteWrapper.querySelector('#allowCams').checked
+  let areaDescription =
+    $serParlanteWrapper.querySelector('#areaDescription').value || ""
 
-  var opts = {
-    allowCams,
-    allowMics,
-    areaDescription,
+  let opts = {
+    "allowCams" : allowCams,
+    "allowMics" : allowMics,
+    "areaDescription" : areaDescription,
   }
-
-  user.areaDescription = areaDescription
-
-  console.log('opts', opts.allowMics, opts.allowCams)
 
   socket.emit('createArea', opts)
 }
