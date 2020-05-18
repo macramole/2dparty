@@ -33,32 +33,65 @@ let nombre
 let started = false
 let showingConfig = false
 
-const speed = 25 //esto hay que cambiar en el servidor y en el cliente !!
+//esto hay que calcularlo en base a la resolución
+let tileSize = 0
+const gridSizeX = 40
+const gridSizeY = 36
+//////
+
+let currentX = 0
+let currentY = 0
 const roomPaddingTop = 0 //absoluto
 const roomPaddingBottom = 0 //absoluto
 const roomPaddingRight = 0.55 //porcentaje
 
-function sendPos() {
-  let x = parseInt($pj.style.left)
-  let y = parseInt($pj.style.top)
+function moveAllPJsToCoords() {
+    let $pjs = document.querySelectorAll('.pj')
 
+    for ( let i = 0 ; i < $pjs.length ; i++ ) {
+        let $pj = $pjs[i]
+        $pj.style.left = (parseInt($pj.dataset.x) * tileSize) + 'px'
+        $pj.style.top = (parseInt($pj.dataset.y) * tileSize) + 'px'
+    }
+}
+
+function movePJtoCurrentCoords() {
+    $pj.style.left = (currentX * tileSize) + 'px'
+    $pj.style.top = (currentY * tileSize) + 'px'
+}
+
+function updatePos(x, y) {
+    currentX = x
+    currentY = y
+    movePJtoCurrentCoords()
+    sendPos()
+}
+
+function sendPos() {
   socket.emit('position', {
-    x: x,
-    y: y,
+    x: currentX,
+    y: currentY,
   })
 }
 
+function setSizes() {
+    tileSize = window.innerWidth * 0.013 // si se cambia el multiplicador hay que cambiarlo del CSS
+
+    let $pjs = document.querySelectorAll('.pj')
+    for ( let i = 0 ; i < $pjs.length ; i++ ) {
+        let $pj = $pjs[i]
+        $pj.style.height = getComputedStyle($pj).width //cuadrado forever
+    }
+}
+
 function isPositionEmpty(x, y) {
-  if (x < 0 || y < roomPaddingTop) {
+  if (x < 0 || y < 0) {
     return false
   }
-  if (x > parseInt(getComputedStyle($room).width) * roomPaddingRight - speed) {
+  if (x > gridSizeX) {
     return false
   }
-  if (
-    y >
-    parseInt(getComputedStyle($room).height) - roomPaddingBottom - speed
-  ) {
+  if ( y > gridSizeY ) {
     return false
   }
 
@@ -66,8 +99,8 @@ function isPositionEmpty(x, y) {
 
   for (let i = 0; i < $pjs.length; i++) {
     let $pj = $pjs[i]
-    let pjX = parseInt($pj.style.left)
-    let pjY = parseInt($pj.style.top)
+    let pjX = $pj.dataset.x
+    let pjY = $pj.dataset.y
 
     if (pjX == x && pjY == y) {
       return false
@@ -78,11 +111,15 @@ function isPositionEmpty(x, y) {
 }
 
 window.addEventListener('load', (ev) => {
-  $pj.style.left = '10px'
-  $pj.style.top = '10px'
-
-  $room.style.height = window.innerHeight + 'px'
+  window.dispatchEvent(new Event('resize'));
   $txtNombre.focus()
+})
+
+window.addEventListener('resize', (ev) => {
+  $room.style.height = window.innerHeight + 'px'
+  setSizes()
+  movePJtoCurrentCoords()
+  moveAllPJsToCoords()
 })
 
 window.addEventListener('keydown', (ev) => {
@@ -92,28 +129,26 @@ window.addEventListener('keydown', (ev) => {
     ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(ev.key) != -1 &&
     !user.isAdminOfArea
   ) {
-    let x = parseInt($pj.style.left)
-    let y = parseInt($pj.style.top)
+    let x = currentX
+    let y = currentY
 
     switch (ev.key) {
       case 'ArrowUp':
-        y -= speed
+        y -= 1
         break
       case 'ArrowDown':
-        y += speed
+        y += 1
         break
       case 'ArrowLeft':
-        x -= speed
+        x -= 1
         break
       case 'ArrowRight':
-        x += speed
+        x += 1
         break
     }
 
     if (isPositionEmpty(x, y)) {
-      $pj.style.left = `${x}px`
-      $pj.style.top = `${y}px`
-      sendPos()
+      updatePos(x,y)
     }
 
     ev.preventDefault()
@@ -152,9 +187,9 @@ $txtNombre.addEventListener('keydown', (ev) => {
 $btnLogin.addEventListener('click', (ev) => {
   var n = document.querySelector('#txtNombre').value
   if (n == '') {
-    n = 'xx'
+    n = '?'
   }
-  $pj.innerHTML = n.substr(0, 2)
+  $pj.innerHTML = n.substr(0, 1)
   user.nombre = n
 
   socket.emit('set name', user.nombre)
@@ -178,7 +213,7 @@ $userConfig
       : config.classList.remove('hide')
 
     showingConfig = !showingConfig
-    event.stopPropagation()
+    e.stopPropagation()
   })
 
 //Para que no se cierre la ventana de click cuando clickeo en ella
@@ -237,16 +272,16 @@ function buildTooltip(node, text) {
 function getPeopleNear() {
   var nodes = document.querySelectorAll('.pj')
   var near = []
-  var mainPjPos = { x: parseInt($pj.style.left), y: parseInt($pj.style.top) }
+  var mainPjPos = { x: currentX, y: currentY }
 
   for (let usr of Array.from(nodes)) {
     if (usr === $pj) continue
-    let usrPos = { x: parseInt(usr.style.left), y: parseInt(usr.style.top) }
+    let usrPos = { x: parseInt(usr.dataset.x), y: parseInt(usr.dataset.y) }
 
     dx = Math.abs(mainPjPos.x - usrPos.x)
     dy = Math.abs(mainPjPos.y - usrPos.y)
 
-    if (dx <= 25 && dy <= 25) {
+    if (dx <= 1 && dy <= 1) {
       near.push(usr)
     }
   }
@@ -297,10 +332,13 @@ socket.on('position', (pos) => {
     $friend.innerHTML = pos.name
 
     $room.appendChild($friend)
+    $friend.style.height = getComputedStyle($friend).width
   }
 
-  $friend.style.left = pos.x + 'px'
-  $friend.style.top = pos.y + 'px'
+  $friend.dataset.x = pos.x
+  $friend.dataset.y = pos.y
+  $friend.style.left = (pos.x * tileSize) + 'px'
+  $friend.style.top = (pos.y * tileSize) + 'px'
 })
 
 socket.on('chat', (chatMessage) => {

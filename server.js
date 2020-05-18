@@ -3,8 +3,6 @@ const app = express()
 const http = require('http').createServer(app)
 const sanitizeHtml = require('sanitize-html')
 
-const speed = 25 //esto tiene que ser igual en cliente y servidor !!!
-
 app.use(express.static('public'))
 
 app.get('/', function (req, res) {
@@ -70,8 +68,8 @@ function getPeopleNear(userID) {
       for (let dy = -1; dy <= 1; dy++) {
         if (dx == 0 && dy == 0) continue
         if (
-          user.pos.x == cUser.pos.x + speed * dx &&
-          user.pos.y == cUser.pos.y + speed * dy
+          user.pos.x == cUser.pos.x + dx &&
+          user.pos.y == cUser.pos.y + dy
         ) {
           idsNear.push(otherUserID)
         }
@@ -160,7 +158,7 @@ io.on('connection', function (socket) {
         x: users[userID].pos.x,
         y: users[userID].pos.y,
         id: userID,
-        name: users[userID].name ? users[userID].name.substr(0, 2) : 'pa',
+        name: users[userID].name ? users[userID].name.substr(0, 1) : '?',
       }
       socket.emit('position', pos)
     }
@@ -236,7 +234,7 @@ io.on('connection', function (socket) {
     user.pos.y = pos.y
 
     pos.id = socket.id
-    pos.name = user.name ? user.name.substr(0, 2) : 'x'
+    pos.name = user.name ? user.name.substr(0, 1) : '?'
     socket.broadcast.emit('position', pos)
 
     checkNeedCall(socket.id)

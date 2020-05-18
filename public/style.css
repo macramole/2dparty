@@ -5,8 +5,9 @@ body {
   background-color: black;
 }
 .pj {
+    overflow: hidden;
 	width: 1.3%;
-	height: 2.6%;
+    /* height se actualiza desde js  */
 	position: absolute;
 	border-radius: 24px;
 	left: 10px;
@@ -15,10 +16,8 @@ body {
 	background-color: #f1ff90;
 	color: #1aa4c4;
 	box-shadow: 2px 2px #ff22c8;
-	/* line-height: 8w; */
 	border: 1px solid #cecece;
 	font-size: 0.9vw;
-	padding-top: 0.05%;
 	box-sizing: border-box;
 }
 
