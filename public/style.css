@@ -19,6 +19,7 @@ body {
 	border: 1px solid #cecece;
 	font-size: 0.9vw;
 	box-sizing: border-box;
+    transition: left 0.05s, top 0.05s;
 }
 
 .adminOfArea {
