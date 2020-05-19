@@ -44,6 +44,7 @@ header nav {
   font-size: 0.9vw;
   box-sizing: border-box;
   transition: left 0.05s, top 0.05s;
+  user-select: none;
 }
 
 .adminOfArea {
@@ -202,7 +203,7 @@ main {
 }
 */
 
-#serParlanteWindow.hide,
+/*#serParlanteWindow.hide,*/
 #btnSerParlante.hide {
   display: none;
 }
@@ -224,6 +225,7 @@ main {
 #serParlanteWindow {
   position: absolute;
   top: 100%;
+  width: 25%;
   background: white;
   padding: 5% 7% 7% 7%;
   border-radius: 9px;
@@ -232,6 +234,9 @@ main {
   border: 1px solid #8a8a8a;
   font-size: 0.9em;
   z-index: 2;
+  opacity: 1;
+  visibility: visible;
+  transition: visibility 0s linear 0s, opacity 300ms;
 }
 
 #serParlanteWindow::before {
@@ -240,7 +245,7 @@ main {
   width: 0;
   height: 0;
   bottom: 100%;
-  left: 1.5em;
+  left: 0.4em;
   border: 0.75rem solid transparent;
   border-top: none;
   border-bottom-color: #fff;
@@ -290,11 +295,23 @@ main {
   position: relative;
   word-break: break-word;
   width: 120px;
-  border: 2px solid red;
-  padding: 8px;
   background: white;
-  opacity: 0.8;
+  padding: 10px;
+  border-radius: 9px;
+  border-bottom-right-radius: 0;
+  box-shadow: 4px 4px #8a8a8a;
+  border: 1px solid #8a8a8a;
+  font-size: 0.9em;
   z-index: 2;
-  border-radius: 24px;
-  transition: opacity 2s;
+  opacity: 1;
+  left: 0;
+  visibility: visible;
+  transition: visibility 0s linear 0s, opacity 300ms;
+}
+
+#serParlanteWindow.hide,
+.tooltip.hide {
+  opacity: 0;
+  visibility: hidden;
+  transition: visibility 0s linear 300ms, opacity 300ms;
 }

@@ -36,7 +36,7 @@ let showingConfig = false
 //esto hay que calcularlo en base a la resolución
 let tileSize = 0
 const gridSizeX = 40
-const gridSizeY = 6
+const gridSizeY = 36
 //////
 
 let currentX = 0
@@ -234,6 +234,9 @@ $serParlanteWrapper
         $pj.classList.add('adminOfArea')
         createArea()
         $pj.dataset.id = socket.id
+        user.areaDescription = document.querySelector(
+          'textarea#areaDescription'
+        ).value
         buildTooltip($pj, user.areaDescription)
         this.innerHTML = 'Dejar Área'
       } else {
@@ -250,24 +253,30 @@ $serParlanteWrapper
 
 function buildTooltip(node, text) {
   var tooltip = document.createElement('div')
-  tooltip.className = 'tooltip'
+  tooltip.classList.add('tooltip')
+  tooltip.classList.add('hide')
   tooltip.id = node.dataset.id
 
+  tooltip.innerHTML = text //user.areaDescription
+  tooltip.style.left = `${parseInt(node.style.left) + 40}px`
+  tooltip.style.top = `${parseInt(node.style.top) - 20}px`
+  node.before(tooltip)
   console.log(node.dataset)
 
   node.addEventListener('mouseover', function (e) {
+    /*
     var tltp = document.querySelector(`#${tooltip.id}.tooltip`)
     if (tltp) {
       tltp.remove()
     }
-    tooltip.innerHTML = text //user.areaDescription
-    tooltip.style.left = `${parseInt(node.style.left) + 40}px`
-    tooltip.style.top = `${parseInt(node.style.top) - 20}px`
-    node.before(tooltip)
+    */
+    tooltip.classList.remove('hide')
   })
 
   node.addEventListener('mouseleave', function (e) {
-    document.querySelector(`#${tooltip.id}.tooltip`).remove()
+    //tooltip.remove()
+    tooltip.classList.add('hide')
+    //document.querySelector(`#${tooltip.id}.tooltip`).remove()
   })
 }
 
@@ -343,23 +352,23 @@ socket.on('chat', (chatMessage) => {
   user.chat[user.atArea].push(chatMessage)
   $chatRead.innerHTML = buildChat(user.chat[user.atArea])
   $chatRead.scrollTop = $chatRead.scrollHeight
-
-  function buildChat(msgs) {
-    var text = ''
-
-    for (let msg of msgs) {
-      text += `
-      <div class="chatLine">
-        <span class="nombre">
-          &lt;${msg.nombre}&gt;
-        </span> ${msg.message}
-      </div>
-      `
-      console.log(msg)
-    }
-    return text
-  }
 })
+
+function buildChat(msgs) {
+  var text = ''
+
+  for (let msg of msgs) {
+    text += `
+    <div class="chatLine">
+      <span class="nombre">
+        &lt;${msg.nombre}&gt;
+      </span> ${msg.message}
+    </div>
+    `
+    console.log(msg)
+  }
+  return text
+}
 
 socket.on('start call', (callOptions) => {
   console.log('start call', callOptions.callID)
@@ -410,7 +419,6 @@ socket.on('newAdminOfArea', (opts) => {
     $friend.classList.add('adminOfArea')
   }
   buildTooltip($friend, opts.areaDescription)
-  //opts.areaDescription
 })
 
 socket.on('removeAdminOfArea', (id) => {
