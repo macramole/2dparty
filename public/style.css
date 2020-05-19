@@ -6,22 +6,29 @@ body {
 }
 
 header {
-  display: flex;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 55%;
-  background-color: rgba(255, 255, 255, 0.8);
-  justify-content: space-between;
+	display: flex;
+	position: absolute;
+	top: 9px;
+	left: 5px;
+	width: 53.5%;
+	/* background-color: rgba(0, 0, 0, 0.13); */
+	justify-content: space-between;
+	color: #d7d7d7;
+	border-radius: 3px;
 }
 
 header h1 {
-  margin-left: 12px;
+	margin: 0.3em 0.3em 0.3em 0.4em;
+	font-size: 1.5em;
 }
 
 header nav {
-  align-self: center;
-  margin-right: 48px;
+	align-self: center;
+	/* margin-right: 48px; */
+	background-color: #d8bfdd9e;
+	padding: 0.3% 1%;
+	border-radius: 3px;
+	color: #351c40;
 }
 
 #serParlanteWrapper {
@@ -53,16 +60,12 @@ header nav {
 }
 
 .iconButton {
-  background: none;
-  border: none;
-  font-size: 1.5em;
-  cursor: pointer;
-  /* transition: text-shadow 0.25s; */
+	background: none;
+	border: none;
+	font-size: 1.5em;
+	cursor: pointer;
+	color: inherit;
 }
-
-/* .iconButton:hover {
-  text-shadow: 2px 2px 2px #80ffc1;
-} */
 
 #pjPrincipal {
   visibility: hidden;
@@ -240,9 +243,9 @@ main {
 }
 
 #btnIsAdminOfArea {
-  width: 65%;
-  margin: 1em auto 0;
-  display: block;
+	width: 78%;
+	margin: 1em auto 0;
+	display: block;
 }
 
 #serParlanteWindow::before {

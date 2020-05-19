@@ -36,28 +36,31 @@ let showingConfig = false
 //esto hay que calcularlo en base a la resolución
 let tileSize = 0
 const gridSizeX = 40
-const gridSizeY = 36
+const gridSizeY = 34
 //////
 
 let currentX = 0
 let currentY = 0
-const roomPaddingTop = 0 //absoluto
-const roomPaddingBottom = 0 //absoluto
-const roomPaddingRight = 0.55 //porcentaje
+const roomPadding = { //porcentaje
+    top: 0.065,
+    // right : 0, definido por cantidad de tiles
+    // bottom: 0.01, definido por cantidad de tiles
+    left : 0.005
+}
 
 function moveAllPJsToCoords() {
   let $pjs = document.querySelectorAll('.pj')
 
   for (let i = 0; i < $pjs.length; i++) {
     let $pj = $pjs[i]
-    $pj.style.left = parseInt($pj.dataset.x) * tileSize + 'px'
-    $pj.style.top = parseInt($pj.dataset.y) * tileSize + 'px'
+    $pj.style.left = parseInt($pj.dataset.x) * tileSize + (roomPadding.left * window.innerWidth) + 'px'
+    $pj.style.top = parseInt($pj.dataset.y) * tileSize + (roomPadding.top * window.innerHeight) + 'px'
   }
 }
 
 function movePJtoCurrentCoords() {
-  $pj.style.left = currentX * tileSize + 'px'
-  $pj.style.top = currentY * tileSize + 'px'
+  $pj.style.left = currentX * tileSize + (roomPadding.left * window.innerWidth) + 'px'
+  $pj.style.top = currentY * tileSize + (roomPadding.top * window.innerHeight) + 'px'
 }
 
 function updatePos(x, y) {
@@ -193,8 +196,11 @@ $btnLogin.addEventListener('click', (ev) => {
   user.nombre = n
 
   socket.emit('set name', user.nombre)
+
+  $pj.style.top = (roomPadding.top * window.innerHeight) + 'px'
+  $pj.style.left = (roomPadding.left * window.innerWidth) + 'px'
+
   $pj.style.visibility = 'visible'
-  $pj.style.top = roomPaddingTop + 'px'
   $login.style.display = 'none'
   $info.style.display = 'block'
   $btnSerParlante.classList.remove('hide')
