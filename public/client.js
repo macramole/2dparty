@@ -39,8 +39,6 @@ const gridSizeX = 40
 const gridSizeY = 34
 //////
 
-let currentX = 0
-let currentY = 0
 const roomPadding = { //porcentaje
     top: 0.065,
     // right : 0, definido por cantidad de tiles
@@ -58,22 +56,23 @@ function moveAllPJsToCoords() {
   }
 }
 
-function movePJtoCurrentCoords() {
-  $pj.style.left = currentX * tileSize + (roomPadding.left * window.innerWidth) + 'px'
-  $pj.style.top = currentY * tileSize + (roomPadding.top * window.innerHeight) + 'px'
+function movePJtoCurrentCoords( $movePJ ) {
+    $movePJ.style.left = parseInt($movePJ.dataset.x) * tileSize + (roomPadding.left * window.innerWidth) + 'px'
+    $movePJ.style.top = parseInt($movePJ.dataset.y) * tileSize + (roomPadding.top * window.innerHeight) + 'px'
 }
 
 function updatePos(x, y) {
-  currentX = x
-  currentY = y
-  movePJtoCurrentCoords()
-  sendPos()
+    $pj.dataset.x = x
+    $pj.dataset.y = y
+
+    movePJtoCurrentCoords($pj)
+    sendPos()
 }
 
 function sendPos() {
   socket.emit('position', {
-    x: currentX,
-    y: currentY,
+    x: parseInt($pj.dataset.x),
+    y: parseInt($pj.dataset.y),
   })
 }
 
@@ -114,14 +113,16 @@ function isPositionEmpty(x, y) {
 }
 
 window.addEventListener('load', (ev) => {
-  window.dispatchEvent(new Event('resize'))
-  $txtNombre.focus()
+    $pj.dataset.x = 0
+    $pj.dataset.y = 0
+
+    window.dispatchEvent(new Event('resize'))
+    $txtNombre.focus()
 })
 
 window.addEventListener('resize', (ev) => {
   $room.style.height = window.innerHeight + 'px'
   setSizes()
-  movePJtoCurrentCoords()
   moveAllPJsToCoords()
 })
 
@@ -132,8 +133,8 @@ window.addEventListener('keydown', (ev) => {
     ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(ev.key) != -1 &&
     !user.isAdminOfArea
   ) {
-    let x = currentX
-    let y = currentY
+    let x = parseInt($pj.dataset.x)
+    let y = parseInt($pj.dataset.y)
 
     switch (ev.key) {
       case 'ArrowUp':
@@ -289,7 +290,7 @@ function buildTooltip(node, text) {
 function getPeopleNear() {
   var nodes = document.querySelectorAll('.pj')
   var near = []
-  var mainPjPos = { x: currentX, y: currentY }
+  var mainPjPos = { x: parseInt($pj.dataset.x), y: parseInt($pj.dataset.y) }
 
   for (let usr of Array.from(nodes)) {
     if (usr === $pj) continue
@@ -350,8 +351,8 @@ socket.on('position', (pos) => {
 
   $friend.dataset.x = pos.x
   $friend.dataset.y = pos.y
-  $friend.style.left = pos.x * tileSize + 'px'
-  $friend.style.top = pos.y * tileSize + 'px'
+
+  movePJtoCurrentCoords($friend)
 })
 
 socket.on('chat', (chatMessage) => {
