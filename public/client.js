@@ -36,52 +36,54 @@ let showingConfig = false
 //esto hay que calcularlo en base a la resolución
 let tileSize = 0
 const gridSizeX = 40
-const gridSizeY = 36
+const gridSizeY = 34
 //////
 
-let currentX = 0
-let currentY = 0
-const roomPaddingTop = 0 //absoluto
-const roomPaddingBottom = 0 //absoluto
-const roomPaddingRight = 0.55 //porcentaje
-
-function moveAllPJsToCoords() {
-    let $pjs = document.querySelectorAll('.pj')
-
-    for ( let i = 0 ; i < $pjs.length ; i++ ) {
-        let $pj = $pjs[i]
-        $pj.style.left = (parseInt($pj.dataset.x) * tileSize) + 'px'
-        $pj.style.top = (parseInt($pj.dataset.y) * tileSize) + 'px'
-    }
+const roomPadding = { //porcentaje
+    top: 0.065,
+    // right : 0, definido por cantidad de tiles
+    // bottom: 0.01, definido por cantidad de tiles
+    left : 0.005
 }
 
-function movePJtoCurrentCoords() {
-    $pj.style.left = (currentX * tileSize) + 'px'
-    $pj.style.top = (currentY * tileSize) + 'px'
+function moveAllPJsToCoords() {
+  let $pjs = document.querySelectorAll('.pj')
+
+  for (let i = 0; i < $pjs.length; i++) {
+    let $pj = $pjs[i]
+    $pj.style.left = parseInt($pj.dataset.x) * tileSize + (roomPadding.left * window.innerWidth) + 'px'
+    $pj.style.top = parseInt($pj.dataset.y) * tileSize + (roomPadding.top * window.innerHeight) + 'px'
+  }
+}
+
+function movePJtoCurrentCoords( $movePJ ) {
+    $movePJ.style.left = parseInt($movePJ.dataset.x) * tileSize + (roomPadding.left * window.innerWidth) + 'px'
+    $movePJ.style.top = parseInt($movePJ.dataset.y) * tileSize + (roomPadding.top * window.innerHeight) + 'px'
 }
 
 function updatePos(x, y) {
-    currentX = x
-    currentY = y
-    movePJtoCurrentCoords()
+    $pj.dataset.x = x
+    $pj.dataset.y = y
+
+    movePJtoCurrentCoords($pj)
     sendPos()
 }
 
 function sendPos() {
   socket.emit('position', {
-    x: currentX,
-    y: currentY,
+    x: parseInt($pj.dataset.x),
+    y: parseInt($pj.dataset.y),
   })
 }
 
 function setSizes() {
-    tileSize = window.innerWidth * 0.013 // si se cambia el multiplicador hay que cambiarlo del CSS
+  tileSize = window.innerWidth * 0.013 // si se cambia el multiplicador hay que cambiarlo del CSS
 
-    let $pjs = document.querySelectorAll('.pj')
-    for ( let i = 0 ; i < $pjs.length ; i++ ) {
-        let $pj = $pjs[i]
-        $pj.style.height = getComputedStyle($pj).width //cuadrado forever
-    }
+  let $pjs = document.querySelectorAll('.pj')
+  for (let i = 0; i < $pjs.length; i++) {
+    let $pj = $pjs[i]
+    $pj.style.height = getComputedStyle($pj).width //cuadrado forever
+  }
 }
 
 function isPositionEmpty(x, y) {
@@ -91,7 +93,7 @@ function isPositionEmpty(x, y) {
   if (x > gridSizeX) {
     return false
   }
-  if ( y > gridSizeY ) {
+  if (y > gridSizeY) {
     return false
   }
 
@@ -111,14 +113,16 @@ function isPositionEmpty(x, y) {
 }
 
 window.addEventListener('load', (ev) => {
-  window.dispatchEvent(new Event('resize'));
-  $txtNombre.focus()
+    $pj.dataset.x = 0
+    $pj.dataset.y = 0
+
+    window.dispatchEvent(new Event('resize'))
+    $txtNombre.focus()
 })
 
 window.addEventListener('resize', (ev) => {
   $room.style.height = window.innerHeight + 'px'
   setSizes()
-  movePJtoCurrentCoords()
   moveAllPJsToCoords()
 })
 
@@ -129,8 +133,8 @@ window.addEventListener('keydown', (ev) => {
     ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(ev.key) != -1 &&
     !user.isAdminOfArea
   ) {
-    let x = currentX
-    let y = currentY
+    let x = parseInt($pj.dataset.x)
+    let y = parseInt($pj.dataset.y)
 
     switch (ev.key) {
       case 'ArrowUp':
@@ -148,7 +152,7 @@ window.addEventListener('keydown', (ev) => {
     }
 
     if (isPositionEmpty(x, y)) {
-      updatePos(x,y)
+      updatePos(x, y)
     }
 
     ev.preventDefault()
@@ -193,8 +197,11 @@ $btnLogin.addEventListener('click', (ev) => {
   user.nombre = n
 
   socket.emit('set name', user.nombre)
+
+  $pj.style.top = (roomPadding.top * window.innerHeight) + 'px'
+  $pj.style.left = (roomPadding.left * window.innerWidth) + 'px'
+
   $pj.style.visibility = 'visible'
-  $pj.style.top = roomPaddingTop + 'px'
   $login.style.display = 'none'
   $info.style.display = 'block'
   $btnSerParlante.classList.remove('hide')
@@ -204,16 +211,17 @@ $btnLogin.addEventListener('click', (ev) => {
 })
 
 // Oculto o muestro la config
-$btnSerParlante
-  .addEventListener('click', function (e) {
-    let $serParlanteWindow = $serParlanteWrapper.querySelector('#serParlanteWindow')
-    showingConfig
-      ? $serParlanteWindow.classList.add('hide')
-      : $serParlanteWindow.classList.remove('hide')
+$btnSerParlante.addEventListener('click', function (e) {
+  let $serParlanteWindow = $serParlanteWrapper.querySelector(
+    '#serParlanteWindow'
+  )
+  showingConfig
+    ? $serParlanteWindow.classList.add('hide')
+    : $serParlanteWindow.classList.remove('hide')
 
-    showingConfig = !showingConfig
-    e.stopPropagation()
-  })
+  showingConfig = !showingConfig
+  e.stopPropagation()
+})
 
 //Para que no se cierre la ventana de click cuando clickeo en ella
 $serParlanteWrapper
@@ -233,48 +241,56 @@ $serParlanteWrapper
         $pj.classList.add('adminOfArea')
         createArea()
         $pj.dataset.id = socket.id
+        user.areaDescription = document.querySelector(
+          'textarea#areaDescription'
+        ).value
         buildTooltip($pj, user.areaDescription)
-        this.innerHTML = "Dejar Área"
+        this.innerHTML = 'Dejar Área'
       } else {
         alert('No se puede crear el área acá.')
-
       }
     } else {
       //destroy room
       socket.emit('destroyArea')
       $pj.classList.remove('adminOfArea')
 
-      this.innerHTML = "Inaugurar área"
+      this.innerHTML = 'Inaugurar área'
     }
   })
 
 function buildTooltip(node, text) {
   var tooltip = document.createElement('div')
-  tooltip.className = 'tooltip'
+  tooltip.classList.add('tooltip')
+  tooltip.classList.add('hide')
   tooltip.id = node.dataset.id
 
+  tooltip.innerHTML = text //user.areaDescription
+  tooltip.style.left = `${parseInt(node.style.left) + 40}px`
+  tooltip.style.top = `${parseInt(node.style.top) - 20}px`
+  node.before(tooltip)
   console.log(node.dataset)
 
   node.addEventListener('mouseover', function (e) {
+    /*
     var tltp = document.querySelector(`#${tooltip.id}.tooltip`)
     if (tltp) {
       tltp.remove()
     }
-    tooltip.innerHTML = text //user.areaDescription
-    tooltip.style.left = `${parseInt(node.style.left) + 40}px`
-    tooltip.style.top = `${parseInt(node.style.top) - 20}px`
-    node.before(tooltip)
+    */
+    tooltip.classList.remove('hide')
   })
 
   node.addEventListener('mouseleave', function (e) {
-    document.querySelector(`#${tooltip.id}.tooltip`).remove()
+    //tooltip.remove()
+    tooltip.classList.add('hide')
+    //document.querySelector(`#${tooltip.id}.tooltip`).remove()
   })
 }
 
 function getPeopleNear() {
   var nodes = document.querySelectorAll('.pj')
   var near = []
-  var mainPjPos = { x: currentX, y: currentY }
+  var mainPjPos = { x: parseInt($pj.dataset.x), y: parseInt($pj.dataset.y) }
 
   for (let usr of Array.from(nodes)) {
     if (usr === $pj) continue
@@ -303,12 +319,12 @@ function createArea() {
   let allowCams = $serParlanteWrapper.querySelector('#allowMics').checked
   let allowMics = $serParlanteWrapper.querySelector('#allowCams').checked
   let areaDescription =
-    $serParlanteWrapper.querySelector('#areaDescription').value || ""
+    $serParlanteWrapper.querySelector('#areaDescription').value || ''
 
   let opts = {
-    "allowCams" : allowCams,
-    "allowMics" : allowMics,
-    "areaDescription" : areaDescription,
+    allowCams: allowCams,
+    allowMics: allowMics,
+    areaDescription: areaDescription,
   }
 
   socket.emit('createArea', opts)
@@ -335,31 +351,31 @@ socket.on('position', (pos) => {
 
   $friend.dataset.x = pos.x
   $friend.dataset.y = pos.y
-  $friend.style.left = (pos.x * tileSize) + 'px'
-  $friend.style.top = (pos.y * tileSize) + 'px'
+
+  movePJtoCurrentCoords($friend)
 })
 
 socket.on('chat', (chatMessage) => {
   user.chat[user.atArea].push(chatMessage)
   $chatRead.innerHTML = buildChat(user.chat[user.atArea])
   $chatRead.scrollTop = $chatRead.scrollHeight
-
-  function buildChat(msgs) {
-    var text = ''
-
-    for (let msg of msgs) {
-      text += `
-      <div class="chatLine">
-        <span class="nombre">
-          &lt;${msg.nombre}&gt;
-        </span> ${msg.message}
-      </div>
-      `
-      console.log(msg)
-    }
-    return text
-  }
 })
+
+function buildChat(msgs) {
+  var text = ''
+
+  for (let msg of msgs) {
+    text += `
+    <div class="chatLine">
+      <span class="nombre">
+        &lt;${msg.nombre}&gt;
+      </span> ${msg.message}
+    </div>
+    `
+    console.log(msg)
+  }
+  return text
+}
 
 socket.on('start call', (callOptions) => {
   console.log('start call', callOptions.callID)
@@ -410,7 +426,6 @@ socket.on('newAdminOfArea', (opts) => {
     $friend.classList.add('adminOfArea')
   }
   buildTooltip($friend, opts.areaDescription)
-  //opts.areaDescription
 })
 
 socket.on('removeAdminOfArea', (id) => {

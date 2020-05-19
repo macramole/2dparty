@@ -3,10 +3,46 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>2D Party</title>
+	<title>2 D ~ P A R T Y</title>
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header>
+    <h1>2DPARTY</h1>
+    <nav>
+      <!--button id="btnSerParlante" class='button'> configuración </button-->
+      <div id="serParlanteWrapper">
+        <button id="btnSerParlante" class="iconButton hide"><i class="fas fa-podcast"></i></button>
+
+        <div id="serParlanteWindow" class="hide">
+          <p>
+			  Si sos DJ, artista, performer, profe o lo que sea podés participar transmitiendo en vivo.
+			  Ubicate donde más te guste y clickeá el botón de abajo para empezar.
+		  </p>
+
+          <p class="permitir">Permitir que los visitantes usen:</p>
+          <div class="allowables">
+            <div>
+              <input type="checkbox" name="allowMics" id="allowMics">
+              <label for="allowMics"><i class="fas fa-microphone-alt"></i> Micrófono</label>
+            </div>
+            <div>
+              <input type="checkbox" name="allowCams" id="allowCams" checked="checked">
+              <label for="allowCams"><i class="fas fa-video"></i> Cámara</label>
+            </div>
+          </div>
+
+          <textarea
+            id="areaDescription"
+            placeholder="¿De qué se trata lo que vas a hacer?"
+            ></textarea>
+
+          <button id="btnIsAdminOfArea" class="button" type="button">Transmitir en vivo</button>
+        </div>
+        </div>
+        <button class="iconButton"> <i class="fas fa-question-circle"></i></button>
+    </nav>
+  </header>
 	<main>
 		<div id="room">
 			<div id="pjPrincipal" class="pj"></div>
@@ -24,36 +60,6 @@
 						<li><i class="fas fa-comments"></i> <span>Acercate a alguien para hablarle</span></li>
 					</ul>
 				</div>
-				<div id="serParlanteWrapper">
-					<button id="btnSerParlante" class="hide"><i class="fas fa-podcast"></i></button>
-
-					<div id="serParlanteWindow" class="hide">
-						<p>
-							Si sos DJ, artista, performer, profe o lo que sea podés participar transmitiendo en vivo.
-							Ubicate donde más te guste y clickeá el botón de abajo. No te podrás mover y tu personaje
-							cambiará de forma para invitar a los demás usuarios a acercarse.
-						</p>
-
-						<p class="permitir">Permitir que los visitantes usen:</p>
-						<div class="allowables">
-							<div>
-								<input type="checkbox" name="allowMics" id="allowMics">
-								<label for="allowMics"><i class="fas fa-microphone-alt"></i> Micrófono</label>
-							</div>
-							<div>
-								<input type="checkbox" name="allowCams" id="allowCams" checked="checked">
-								<label for="allowCams"><i class="fas fa-video"></i> Cámara</label>
-							</div>
-						</div>
-
-						<textarea
-						  id="areaDescription"
-						  placeholder="¿De qué se trata lo que vas a hacer?"
-						  ></textarea>
-
-						<button id="btnIsAdminOfArea" class="button" type="button">Transmitir en vivo</button>
-					</div>
-			    </div>
 			</div>
 		</aside>
 		<div id="chat">
