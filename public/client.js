@@ -412,7 +412,8 @@ socket.on('start call', (callOptions) => {
   }
 
   if ( callOptions.owner != socket.id ) {
-      options.disableRemoteMute = true
+      options.configOverwrite.disableRemoteMute = true
+      options.configOverwrite.remoteVideoMenu = { disableKick : true }
   }
 
   //Esto sucede sólo cuando se crea un area (sino no están esos parámetros)
