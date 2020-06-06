@@ -411,11 +411,6 @@ socket.on('start call', (callOptions) => {
     },
   }
 
-  if ( callOptions.owner != socket.id ) {
-      options.configOverwrite.disableRemoteMute = true
-      options.configOverwrite.remoteVideoMenu = { disableKick : true }
-  }
-
   //Esto sucede sólo cuando se crea un area (sino no están esos parámetros)
   if ( callOptions.mic === false ) {
     options.configOverwrite = {
@@ -451,6 +446,11 @@ socket.on('start call', (callOptions) => {
         let idxCam = options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.indexOf("camera")
         options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.splice(idxCam, 1)
     }
+  }
+
+  if ( callOptions.owner != socket.id ) {
+      options.configOverwrite.disableRemoteMute = true
+      options.configOverwrite.remoteVideoMenu = { disableKick : true }
   }
 
   console.log(callOptions)
