@@ -178,8 +178,7 @@ io.on('connection', function (socket) {
       socket.emit('position', pos)
     }
 
-    if (users[userID].areaDescription) {
-      console.log('sending data to users...')
+    if (users[userID].isAdminOfArea) {
       socket.emit('newAdminOfArea', {
         id: userID,
         areaDescription: users[userID].areaDescription,
