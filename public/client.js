@@ -411,6 +411,10 @@ socket.on('start call', (callOptions) => {
     },
   }
 
+  if ( callOptions.owner != socket.id ) {
+      options.disableRemoteMute = true
+  }
+
   //Esto sucede sólo cuando se crea un area (sino no están esos parámetros)
   if ( callOptions.mic === false ) {
     options.configOverwrite = {
@@ -433,7 +437,7 @@ socket.on('start call', (callOptions) => {
         let idxMic = options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.indexOf("microphone")
         options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.splice(idxMic, 1)
 
-        // options.configOverwrite.startSilent = true
+        options.configOverwrite.startSilent = true
         options.configOverwrite.enableNoAudioDetection = false
         options.configOverwrite.enableNoisyMicDetection = false
     }
@@ -453,7 +457,6 @@ socket.on('start call', (callOptions) => {
 
   $infoBeforeMeet.style.display = 'none'
   jitsiAPI = new JitsiMeetExternalAPI(jitsidomain, options)
-  // jitsiAPI.executeCommand('toggleAudio');
 })
 
 socket.on('end call', () => {
