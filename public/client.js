@@ -416,12 +416,12 @@ socket.on('start call', (callOptions) => {
     options.configOverwrite = {
         enableWelcomePage: false,
 
-        stereo: true,
-        disableAP: true,
-        disableAEC: true,
-        disableNS: true,
-        disableAGC: true,
-        disableHPF: true,
+        stereo: true, // from modules/RTC/RTCUtils.js
+        disableAP: true, //audio processing
+        disableAEC: true, //automatic echo cancellation
+        disableNS: true, //noise supression
+        disableAGC: true, //auto gain control
+        disableHPF: true, //highpass filter
         p2p : {
             enabled : false
         },
@@ -433,7 +433,7 @@ socket.on('start call', (callOptions) => {
         let idxMic = options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.indexOf("microphone")
         options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.splice(idxMic, 1)
 
-        options.configOverwrite.startSilent = true
+        // options.configOverwrite.startSilent = true
         options.configOverwrite.enableNoAudioDetection = false
         options.configOverwrite.enableNoisyMicDetection = false
     }
