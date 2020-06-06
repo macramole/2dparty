@@ -316,8 +316,8 @@ function canCreateArea(nearbyUsrs) {
 }
 
 function createArea() {
-  let allowCams = $serParlanteWrapper.querySelector('#allowMics').checked
-  let allowMics = $serParlanteWrapper.querySelector('#allowCams').checked
+  let allowCams = $serParlanteWrapper.querySelector('#allowCams').checked
+  let allowMics = $serParlanteWrapper.querySelector('#allowMics').checked
   let areaDescription =
     $serParlanteWrapper.querySelector('#areaDescription').value || ''
 
@@ -378,28 +378,78 @@ function buildChat(msgs) {
 }
 
 socket.on('start call', (callOptions) => {
-  console.log('start call', callOptions.callID)
+  console.log('start call', callOptions.id)
 
-  user.atArea = callOptions.callID
+  user.atArea = callOptions.id
 
   if (!user.chat[user.atArea]) {
     user.chat[user.atArea] = []
   }
 
   const options = {
-    roomName: callOptions.callID,
+    roomName: callOptions.id,
     width: window.innerWidth * 0.45,
     height: window.innerHeight * 0.54,
     parentNode: $meet,
     userInfo: {
       displayName: user.nombre,
     },
+    configOverwrite : {
+        enableWelcomePage: false
+    },
     interfaceConfigOverwrite: {
-      // filmStripOnly: true,
-      // DEFAULT_REMOTE_DISPLAY_NAME: nombre,
-      // TOOLBAR_BUTTONS: ["camera", "chat", "tileview", "filmstrip"]
+        TOOLBAR_BUTTONS: [
+            'microphone', 'camera', 'desktop', 'fullscreen',
+            'fodeviceselection', 'recording', 'livestreaming',
+            'videoquality', 'filmstrip', 'stats', 'shortcuts',
+            'tileview', 'videobackgroundblur',
+        ],
+        SETTINGS_SECTIONS: [ 'devices', 'language' ],
+        RECENT_LIST_ENABLED : false,
+        DISABLE_JOIN_LEAVE_NOTIFICATIONS : true,
+        DISABLE_PRESENCE_STATUS : true,
     },
   }
+
+  //Esto sucede sólo cuando se crea un area (sino no están esos parámetros)
+  if ( callOptions.mic === false ) {
+    options.configOverwrite = {
+        enableWelcomePage: false,
+
+        stereo: true,
+        disableAP: true,
+        disableAEC: true,
+        disableNS: true,
+        disableAGC: true,
+        disableHPF: true,
+        p2p : {
+            enabled : false
+        },
+
+        startAudioMuted : 1,
+    }
+
+    if ( callOptions.owner != socket.id ) {
+        let idxMic = options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.indexOf("microphone")
+        options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.splice(idxMic, 1)
+
+        // options.configOverwrite.startSilent = true
+        options.configOverwrite.enableNoAudioDetection = false
+        options.configOverwrite.enableNoisyMicDetection = false
+    }
+  }
+
+  if ( callOptions.video === false ) {
+    options.configOverwrite.startVideoMuted = 1
+
+    if ( callOptions.owner != socket.id ) {
+        let idxCam = options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.indexOf("camera")
+        options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.splice(idxCam, 1)
+    }
+  }
+
+  console.log(callOptions)
+  console.log(options)
 
   $infoBeforeMeet.style.display = 'none'
   jitsiAPI = new JitsiMeetExternalAPI(jitsidomain, options)

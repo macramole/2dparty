@@ -32,24 +32,40 @@ function makeCallID() {
   return result
 }
 
-function startCall(to, callID, options = {}) {
-  if (callID == null) {
-    callID = makeCallID()
+function startCall(to, callInfo = null) {
+  if (callInfo == null) {
+      callInfo = {
+          id : makeCallID(),
+          mic : true,
+          video : true
+      }
+  } else if ( callInfo.id == null ) {
+      callInfo.id = makeCallID()
+
+      if ( users[to].isAdminOfArea ) {
+          callInfo.owner = to
+      }
   }
-  io.sockets.sockets[to].join(callID)
-  users[to].callID = callID
 
-  options.callID = callID
+  io.sockets.sockets[to].join(callInfo.id)
+  users[to].callInfo = callInfo
 
-  io.to(to).emit('start call', options)
+  io.to(to).emit('start call', callInfo)
 
-  return callID
+  return callInfo
+}
+
+function destroyRoom(roomName) {
+    var clients = io.sockets.adapter.rooms[roomName].sockets;
+    for ( let clientID in clients ) {
+        endCall(clientID)
+    }
 }
 
 function endCall(to) {
   io.to(to).emit('end call')
-  io.sockets.sockets[to].leave(users[to].callID)
-  users[to].callID = null
+  io.sockets.sockets[to].leave(users[to].callInfo.id)
+  users[to].callInfo = null
 }
 
 function getPeopleNear(userID) {
@@ -89,7 +105,7 @@ function checkLeftAlone(userID) {
     let u = users[uid]
     if (u.id == userID) continue
     if (u.isAdminOfArea) break //si hay un admin ya fue no se rompe nunca, puede estar solo el admin
-    if (u.callID == cUser.callID) {
+    if (u.callInfo && cUser.callInfo && u.callInfo.id == cUser.callInfo.id) {
       if (oneFriend == null) {
         oneFriend = u.id
       } else {
@@ -114,22 +130,21 @@ function checkNeedCall(userID) {
 
   //si no hay nadie cerca
   if (nearUsers.length == 0) {
-    if (cUser.callID) {
+    if (cUser.callInfo) {
       // si estaba en una llamada y se fue
-      //(acá deliberadamente no llamo a endCall)
       checkLeftAlone(cUser.id)
       endCall(cUser.id)
     }
   } else {
     //si hay alguien cerca
-    if (cUser.callID == null) {
+    if (cUser.callInfo == null) {
       //si hay gente cerca y no estas en una llamada
       //deberia mirar si los que estan cerca no están en una llamada
       let nearCall = null
 
       for (let otherUserID of nearUsers) {
-        if (users[otherUserID].callID) {
-          nearCall = users[otherUserID].callID
+        if (users[otherUserID].callInfo) {
+          nearCall = users[otherUserID].callInfo
           break
         }
       }
@@ -138,10 +153,10 @@ function checkNeedCall(userID) {
         startCall(cUser.id, nearCall)
       } else {
         // Si el user había creado un room ya tenemos call id
-        let newCallID = startCall(cUser.id, null)
+        let callInfo = startCall(cUser.id)
 
         for (let otherUserID of nearUsers) {
-          startCall(otherUserID, newCallID)
+          startCall(otherUserID, callInfo)
         }
       }
     } else {
@@ -176,7 +191,7 @@ io.on('connection', function (socket) {
     id: socket.id,
     isAdminOfArea: false,
     pos: null,
-    callID: null, //esto es el nombre del room en el que está también
+    callInfo: null, //esto es { id: <id>, mic: true/false, video: true/false }
   }
   let user = users[socket.id]
 
@@ -188,36 +203,25 @@ io.on('connection', function (socket) {
     }) //acá habria que pasar el texto. y si el user entra después de que el admin la creó??
     // guardo la descripción
     users[socket.id].areaDescription = opts.areaDescription
+    users[socket.id].isAdminOfArea = true
 
-    if (users[socket.id].callID) {
-      endCall(users[socket.id].callID)
+    if (users[socket.id].callInfo) {
+      endCall(users[socket.id].callInfo.id)
     }
 
-    let callID = startCall(socket.id, null, {
+    let callInfo = startCall(socket.id, {
       mic: opts.allowMics,
       video: opts.allowCams,
+      owner: true
     })
 
-    console.log('created room with id', callID)
+    console.log('created room with id', callInfo.id)
   })
 
   socket.on('destroyArea', function () {
-    //Destruyo el room sólo cuando se va el último user
-    // Que pasa si un adminOfArea se va del room? (por ahora nada con el room)
-    // TODO: acá habria que hacer que heche a todos
     socket.broadcast.emit('removeAdminOfArea', socket.id)
-    var destroyRoom = true
-    for (let userID in users) {
-      if (userID !== socket.id) {
-        if (users[userID].callID === socket.id) {
-          destroyRoom = false
-        }
-      }
-    }
-    if (destroyRoom) {
-      socket.leave(users[socket.id].callID)
-      console.log('destroyed room', socket.id)
-    }
+    users[socket.id].isAdminOfArea = false
+    destroyRoom( users[socket.id].callInfo.id )
   })
 
   socket.on('set name', (name) => {
@@ -248,10 +252,10 @@ io.on('connection', function (socket) {
       message: chatMessage.message ? sanitizeHtml(chatMessage.message) : '???',
     }
 
-    console.log(chatMessage)
+    // console.log(chatMessage)
     // Si estás en una llamada manda el msj al room de la llamada
-    if (user.callID) {
-      io.to(socket.rooms[user.callID]).emit('chat', chatMessage)
+    if (user.callInfo) {
+      io.to(socket.rooms[user.callInfo.id]).emit('chat', chatMessage)
     } else {
       // Esto se podría dejar de mandar a todx (podría haber un room default?)
       io.emit('chat', chatMessage)
