@@ -220,7 +220,11 @@ io.on('connection', function (socket) {
   socket.on('destroyArea', function () {
     socket.broadcast.emit('removeAdminOfArea', socket.id)
     users[socket.id].isAdminOfArea = false
-    destroyRoom( users[socket.id].callInfo.id )
+
+    //aca podria haber un bug
+    if ( users[socket.id].callInfo && users[socket.id].callInfo.id ) {
+        destroyRoom( users[socket.id].callInfo.id )
+    }
   })
 
   socket.on('set name', (name) => {
