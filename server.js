@@ -63,9 +63,11 @@ function destroyRoom(roomName) {
 }
 
 function endCall(to) {
-  io.to(to).emit('end call')
-  io.sockets.sockets[to].leave(users[to].callInfo.id)
-  users[to].callInfo = null
+    if ( io.sockets.sockets[to] ) {
+        io.to(to).emit('end call')
+        io.sockets.sockets[to].leave(users[to].callInfo.id)
+        users[to].callInfo = null
+    }
 }
 
 function getPeopleNear(userID) {

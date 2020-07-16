@@ -451,6 +451,8 @@ socket.on('start call', (callOptions) => {
   if ( callOptions.owner != socket.id ) {
       options.configOverwrite.disableRemoteMute = true
       options.configOverwrite.remoteVideoMenu = { disableKick : true }
+  } else {
+      options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.push("sharedvideo") 
   }
 
   console.log(callOptions)
