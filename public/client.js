@@ -335,6 +335,10 @@ function createArea() {
 // WEBSOCKET
 
 /////////////////////////////////////////
+socket.on("disconnect", () => {
+    alert("Error en el servidor, se actualizará la página")
+    location.reload()
+})
 
 socket.on('position', (pos) => {
   let $friend = document.querySelector(`.pj[data-id="${pos.id}"]`)
@@ -452,7 +456,7 @@ socket.on('start call', (callOptions) => {
       options.configOverwrite.disableRemoteMute = true
       options.configOverwrite.remoteVideoMenu = { disableKick : true }
   } else {
-      options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.push("sharedvideo") 
+      options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.push("sharedvideo")
   }
 
   console.log(callOptions)

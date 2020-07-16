@@ -52,6 +52,8 @@ function startCall(to, callInfo = null) {
 
   io.to(to).emit('start call', callInfo)
 
+  // console.log("startCall", to, callInfo)
+
   return callInfo
 }
 
@@ -107,7 +109,7 @@ function checkLeftAlone(userID) {
     let u = users[uid]
     if (u.id == userID) continue
     if (u.isAdminOfArea) break //si hay un admin ya fue no se rompe nunca, puede estar solo el admin
-    if (u.callInfo && cUser.callInfo && u.callInfo.id == cUser.callInfo.id) {
+    if (u.callInfo && cUser.callInfo && u.callInfo.id == cUser.callInfo.id) {// && !u.callInfo.owner) {
       if (oneFriend == null) {
         oneFriend = u.id
       } else {
