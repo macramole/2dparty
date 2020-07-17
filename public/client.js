@@ -252,38 +252,36 @@ $serParlanteWrapper
       //destroy room
       socket.emit('destroyArea')
       $pj.classList.remove('adminOfArea')
-
+      destroyTooltip($pj.dataset.id);
       this.innerHTML = 'Inaugurar área'
     }
   })
 
 function buildTooltip(node, text) {
-  var tooltip = document.createElement('div')
+  let tooltip = document.createElement('div')
   tooltip.classList.add('tooltip')
   tooltip.classList.add('hide')
-  tooltip.id = node.dataset.id
+  tooltip.dataset.pj = node.dataset.id
 
   tooltip.innerHTML = text //user.areaDescription
   tooltip.style.left = `${parseInt(node.style.left) + 40}px`
   tooltip.style.top = `${parseInt(node.style.top) - 20}px`
   node.before(tooltip)
-  console.log(node.dataset)
 
   node.addEventListener('mouseover', function (e) {
-    /*
-    var tltp = document.querySelector(`#${tooltip.id}.tooltip`)
-    if (tltp) {
-      tltp.remove()
-    }
-    */
     tooltip.classList.remove('hide')
   })
 
   node.addEventListener('mouseleave', function (e) {
-    //tooltip.remove()
     tooltip.classList.add('hide')
-    //document.querySelector(`#${tooltip.id}.tooltip`).remove()
   })
+}
+
+function destroyTooltip(pjID) {
+    let $tooltip = document.querySelector(`.tooltip[data-pj="${pjID}"]`)
+    if ($tooltip) {
+        $tooltip.remove()
+    }
 }
 
 function getPeopleNear() {
@@ -503,4 +501,5 @@ socket.on('removeAdminOfArea', (id) => {
   if ($friend) {
     $friend.classList.remove('adminOfArea')
   }
+  destroyTooltip(id);
 })
