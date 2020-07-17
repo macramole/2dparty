@@ -450,6 +450,7 @@ socket.on('start call', (callOptions) => {
         options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.splice(idxMic, 1)
 
         options.configOverwrite.startAudioMuted = 1
+        options.configOverwrite.enableTalkWhileMuted = false
         // options.configOverwrite.startSilent = true
         options.configOverwrite.enableNoAudioDetection = false
         options.configOverwrite.enableNoisyMicDetection = false
