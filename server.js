@@ -2,7 +2,9 @@ const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
 const sanitizeHtml = require('sanitize-html')
-const linkifyHtml = require('linkifyjs/html');
+const linkifyHtml = require('linkifyjs/html')
+// esto se setea cuando arranca el server y actualiza a los clientes si es necesario
+let serverVersion
 
 app.use(express.static('public'))
 
@@ -12,7 +14,8 @@ app.get('/', function (req, res) {
 
 let port = process.env.PORT || 3000
 http.listen(port, function () {
-  console.log(`2 D ~ P A R T Y -- listening on port ${port}!`)
+    serverVersion = makeCallID();
+    console.log(`2 D ~ P A R T Y -- listening on port ${port}!`)
 })
 
 //////////////////////////////
@@ -195,6 +198,8 @@ io.on('connection', function (socket) {
     }
   }
 
+  socket.emit("serverVersion", serverVersion)
+
   users[socket.id] = {
     id: socket.id,
     isAdminOfArea: false,
@@ -290,6 +295,5 @@ io.on('connection', function (socket) {
 
     socket.broadcast.emit('user disconnected', socket.id)
     delete users[socket.id]
-    console.log(users)
   })
 })

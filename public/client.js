@@ -1,4 +1,5 @@
 let socket = io()
+let serverVersion = null;
 
 let $pj = document.querySelector('#pjPrincipal')
 let $room = document.querySelector('#room')
@@ -127,6 +128,10 @@ window.addEventListener('resize', (ev) => {
 
 window.addEventListener('keydown', (ev) => {
   if (!user.joinedWorld) return
+  if (!socket.connected) {
+      addToChat("No estás conectado al servidor. Reconectando...")
+      return
+  }
 
   if (
     ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(ev.key) != -1 &&
@@ -367,9 +372,16 @@ function addToChat( msg ) {
 // WEBSOCKET
 
 /////////////////////////////////////////
-socket.on("disconnect", () => {
-    alert("Error en el servidor, se actualizará la página")
-    location.reload()
+socket.on("serverVersion", (version) => {
+    if ( serverVersion == null ) {
+        serverVersion = version
+    } else if ( serverVersion != version ) {
+        socket.disconnect()
+        setTimeout( () => {
+            alert("Error en el servidor, se actualizará la página")
+            location.reload()
+        }, 4000)
+    }
 })
 
 socket.on('position', (pos) => {
