@@ -243,7 +243,11 @@ $serParlanteWrapper
         user.areaDescription = document.querySelector(
           'textarea#areaDescription'
         ).value
-        buildTooltip($pj, user.areaDescription)
+
+        if ( user.areaDescription && user.areaDescription.trim() != "" ) {
+            buildTooltip($pj, user.areaDescription)
+        }
+
         this.innerHTML = 'Dejar Área'
       } else {
         alert('No se puede crear el área acá.')
@@ -493,7 +497,9 @@ socket.on('newAdminOfArea', (opts) => {
   if ($friend) {
     $friend.classList.add('adminOfArea')
   }
-  buildTooltip($friend, opts.areaDescription)
+  if ( opts.areaDescription && opts.areaDescription.trim() != ""  ) {
+      buildTooltip($friend, opts.areaDescription)
+  }
 })
 
 socket.on('removeAdminOfArea', (id) => {
