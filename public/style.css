@@ -294,7 +294,7 @@ main {
 }
 #serParlanteWindow .allowables {
   display: flex;
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
   padding: 0 1%;
 }
 
@@ -309,6 +309,17 @@ main {
   padding: 3px;
   border-radius: 5px;
   margin: 0 2%;
+}
+
+#serParlanteWindow .audioFilters {
+  margin-bottom: 0.5em;
+  text-align: center;
+}
+
+#serParlanteWindow .audioFilters label {
+	position: relative;
+	top: -2px;
+
 }
 
 .tooltip {

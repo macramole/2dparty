@@ -219,6 +219,7 @@ io.on('connection', function (socket) {
     let callInfo = startCall(socket.id, {
       mic: opts.allowMics,
       video: opts.allowCams,
+      disableAudioFilters : opts.disableAudioFilters,
       owner: true
     })
 

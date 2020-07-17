@@ -319,6 +319,8 @@ function canCreateArea(nearbyUsrs) {
 function createArea() {
   let allowCams = $serParlanteWrapper.querySelector('#allowCams').checked
   let allowMics = $serParlanteWrapper.querySelector('#allowMics').checked
+  let disableAudioFilters = $serParlanteWrapper.querySelector('#disableAudioFilters').checked
+
   let areaDescription =
     $serParlanteWrapper.querySelector('#areaDescription').value || ''
 
@@ -326,6 +328,7 @@ function createArea() {
     allowCams: allowCams,
     allowMics: allowMics,
     areaDescription: areaDescription,
+    disableAudioFilters: disableAudioFilters
   }
 
   socket.emit('createArea', opts)
@@ -422,23 +425,26 @@ socket.on('start call', (callOptions) => {
     },
   }
 
+  if ( callOptions.disableAudioFilters ) {
+      options.configOverwrite = {
+          enableWelcomePage: false,
+
+          stereo: true, // from modules/RTC/RTCUtils.js
+          disableAP: true, //audio processing
+          disableAEC: true, //automatic echo cancellation
+          disableNS: true, //noise supression
+          disableAGC: true, //auto gain control
+          disableHPF: true, //highpass filter
+          p2p : {
+              enabled : false
+          },
+
+          // startAudioMuted : 1,
+      }
+  }
+
   //Esto sucede sólo cuando se crea un area (sino no están esos parámetros)
   if ( callOptions.mic === false ) {
-    options.configOverwrite = {
-        enableWelcomePage: false,
-
-        stereo: true, // from modules/RTC/RTCUtils.js
-        disableAP: true, //audio processing
-        disableAEC: true, //automatic echo cancellation
-        disableNS: true, //noise supression
-        disableAGC: true, //auto gain control
-        disableHPF: true, //highpass filter
-        p2p : {
-            enabled : false
-        },
-
-        // startAudioMuted : 1,
-    }
 
     if ( callOptions.owner != socket.id ) {
         let idxMic = options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.indexOf("microphone")
