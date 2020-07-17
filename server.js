@@ -102,15 +102,18 @@ function getPeopleNear(userID) {
 }
 
 function checkLeftAlone(userID) {
-  //si eran dos y el otro quedó solo deberia desconectarlo
+  //esto se llama cuando userID se mueve y no quiere dejar solo
+  // a sus amigos
   let cUser = users[userID]
 
   let oneFriend = null
   for (let uid in users) {
     let u = users[uid]
     if (u.id == userID) continue
-    if (u.isAdminOfArea) break //si hay un admin ya fue no se rompe nunca, puede estar solo el admin
-    if (u.callInfo && cUser.callInfo && u.callInfo.id == cUser.callInfo.id) {// && !u.callInfo.owner) {
+    if (u.isAdminOfArea) continue //si hay un admin ya fue no se rompe nunca, puede estar solo el admin
+    //si un usuario tiene la misma conversacion y esa conversación no es creada por un parlante
+    if (u.callInfo && cUser.callInfo && u.callInfo.id == cUser.callInfo.id && !u.callInfo.owner) {
+        // si hay mas de uno oneFriend es null
       if (oneFriend == null) {
         oneFriend = u.id
       } else {
