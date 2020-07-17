@@ -379,7 +379,8 @@ socket.on('position', (pos) => {
     $friend = document.createElement('div')
     $friend.classList.add('pj')
     $friend.dataset.id = pos.id
-    $friend.innerHTML = pos.name
+    $friend.textContent = pos.name.substr(0,1)
+    $friend.title = pos.name
 
     $room.appendChild($friend)
     $friend.style.height = getComputedStyle($friend).width

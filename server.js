@@ -181,7 +181,8 @@ io.on('connection', function (socket) {
         x: users[userID].pos.x,
         y: users[userID].pos.y,
         id: userID,
-        name: users[userID].name ? users[userID].name.substr(0, 1) : '?',
+        // name: users[userID].name ? users[userID].name.substr(0, 1) : '?',
+        name: users[userID].name ? users[userID].name : '?',
       }
       socket.emit('position', pos)
     }
@@ -250,7 +251,8 @@ io.on('connection', function (socket) {
     user.pos.y = pos.y
 
     pos.id = socket.id
-    pos.name = user.name ? user.name.substr(0, 1) : '?'
+    // pos.name = user.name ? user.name.substr(0, 1) : '?'
+    pos.name = user.name ? user.name : '?'
     socket.broadcast.emit('position', pos)
 
     checkNeedCall(socket.id)
