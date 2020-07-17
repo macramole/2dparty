@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
 const sanitizeHtml = require('sanitize-html')
+const linkifyHtml = require('linkifyjs/html');
 
 app.use(express.static('public'))
 
@@ -254,17 +255,24 @@ io.on('connection', function (socket) {
   socket.on('chat', (chatMessage) => {
     if (!chatMessage.message || chatMessage.message.trim() == '') return
 
+    forceGlobal = false
+    if ( chatMessage.message.length >= 2 && chatMessage.message.substr(0,2) == "/g" ) {
+        forceGlobal = true
+        chatMessage.message = chatMessage.message.substr(3)
+    }
+
     chatMessage = {
       nombre: chatMessage.nombre ? sanitizeHtml(chatMessage.nombre) : '???',
-      message: chatMessage.message ? sanitizeHtml(chatMessage.message) : '???',
+      message: chatMessage.message ? linkifyHtml(sanitizeHtml(chatMessage.message)) : '???',
+      isRoomChat: false
     }
 
     // console.log(chatMessage)
     // Si estás en una llamada manda el msj al room de la llamada
-    if (user.callInfo) {
-      io.to(socket.rooms[user.callInfo.id]).emit('chat', chatMessage)
+    if (user.callInfo && !forceGlobal) {
+        chatMessage.isRoomChat = true
+        io.to(socket.rooms[user.callInfo.id]).emit('chat', chatMessage)
     } else {
-      // Esto se podría dejar de mandar a todx (podría haber un room default?)
       io.emit('chat', chatMessage)
     }
   })

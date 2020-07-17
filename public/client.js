@@ -21,13 +21,12 @@ const AREA_WORLD = 'world'
 let user = {
   nombre: '',
   joinedWorld: false,
-  joinedRoom: false,
+  // joinedRoom: false,
   atArea: AREA_WORLD,
   isAdminOfArea: false,
   areaDescription: '',
   chat: {},
 }
-user.chat[AREA_WORLD] = []
 
 let nombre
 let started = false
@@ -330,6 +329,34 @@ function createArea() {
   socket.emit('createArea', opts)
 }
 
+function addToChat( msg ) {
+    if ( typeof msg == "string" ) {
+        //una notificacion
+        $chatRead.innerHTML += `
+            <div class="chatLine notificacion">
+                ${msg}
+            </div>
+        `
+    } else {
+        //es un chat comun
+        claseGlobal = ""
+
+        if (user.atArea != AREA_WORLD && !msg.isRoomChat) {
+            claseGlobal = "global"
+        }
+
+        $chatRead.innerHTML += `
+            <div class="chatLine ${claseGlobal}">
+                <span class="nombre">
+                    &lt;${msg.nombre}&gt;
+                </span> ${msg.message}
+            </div>
+        `
+    }
+
+    $chatRead.scrollTop = $chatRead.scrollHeight
+}
+
 /////////////////////////////////////////
 
 // WEBSOCKET
@@ -359,36 +386,14 @@ socket.on('position', (pos) => {
   movePJtoCurrentCoords($friend)
 })
 
-socket.on('chat', (chatMessage) => {
-  user.chat[user.atArea].push(chatMessage)
-  $chatRead.innerHTML = buildChat(user.chat[user.atArea])
-  $chatRead.scrollTop = $chatRead.scrollHeight
+socket.on('chat', (msg) => {
+    addToChat(msg);
 })
-
-function buildChat(msgs) {
-  var text = ''
-
-  for (let msg of msgs) {
-    text += `
-    <div class="chatLine">
-      <span class="nombre">
-        &lt;${msg.nombre}&gt;
-      </span> ${msg.message}
-    </div>
-    `
-    console.log(msg)
-  }
-  return text
-}
 
 socket.on('start call', (callOptions) => {
   console.log('start call', callOptions.id)
 
   user.atArea = callOptions.id
-
-  if (!user.chat[user.atArea]) {
-    user.chat[user.atArea] = []
-  }
 
   const options = {
     roomName: callOptions.id,
@@ -459,11 +464,14 @@ socket.on('start call', (callOptions) => {
       options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.push("sharedvideo")
   }
 
-  console.log(callOptions)
-  console.log(options)
+  // console.log(callOptions)
+  // console.log(options)
 
   $infoBeforeMeet.style.display = 'none'
   jitsiAPI = new JitsiMeetExternalAPI(jitsidomain, options)
+
+
+  addToChat("Entraste a una conversación. Lo que chatees acá sólo lo verá la gente con la que te reuniste. El chat global aparecerá en gris.")
 })
 
 socket.on('end call', () => {
@@ -471,6 +479,8 @@ socket.on('end call', () => {
   user.atArea = AREA_WORLD
   if (jitsiAPI) jitsiAPI.dispose()
   $infoBeforeMeet.style.display = 'block'
+
+  addToChat("Te fuiste de la conversación")
 })
 
 socket.on('user disconnected', (id) => {
