@@ -461,7 +461,7 @@ socket.on('start call', (callOptions) => {
         let idxMic = options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.indexOf("microphone")
         options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.splice(idxMic, 1)
 
-        options.configOverwrite.startAudioMuted = 1
+        // options.configOverwrite.startAudioMuted = 1
         options.configOverwrite.enableTalkWhileMuted = false
         // options.configOverwrite.startSilent = true
         options.configOverwrite.enableNoAudioDetection = false
@@ -490,6 +490,28 @@ socket.on('start call', (callOptions) => {
 
   $infoBeforeMeet.style.display = 'none'
   jitsiAPI = new JitsiMeetExternalAPI(jitsidomain, options)
+  if ( callOptions.mic === false ) {
+      if ( callOptions.owner != socket.id ) {
+          // jitsiAPI.addEventListener("audioMuteStatusChanged", (e) => {
+          //     console.log("2dPartyTest: audioMuteStatusChanged", e.muted)
+          //     if ( !e.muted ) {
+          //         jitsiAPI.executeCommand('toggleAudio');
+          //         console.log("2dPartyTest: muting")
+          //     }
+          // } );
+
+          // jitsiAPI.addEventListener("videoConferenceJoined", (e) => {
+          //     console.log("2dPartyTest: videoConferenceJoined")
+          //     jitsiAPI.executeCommand('toggleAudio');
+          //     console.log("2dPartyTest: muting")
+          // } );
+
+      } else {
+          jitsiAPI.addEventListener("participantJoined", (e) => {
+              jitsiAPI.executeCommand('muteEveryone');
+          })
+      }
+  }
 
 
   addToChat("Entraste a una conversación. Lo que chatees acá sólo lo verá la gente con la que te reuniste. El chat global aparecerá en gris.")
