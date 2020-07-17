@@ -12,7 +12,7 @@ app.get('/', function (req, res) {
 
 let port = process.env.PORT || 3000
 http.listen(port, function () {
-  console.log(`Example app listening on port ${port}!`)
+  console.log(`2 D ~ P A R T Y -- listening on port ${port}!`)
 })
 
 //////////////////////////////
