@@ -435,14 +435,14 @@ socket.on('start call', (callOptions) => {
             enabled : false
         },
 
-        startAudioMuted : 1,
+        // startAudioMuted : 1,
     }
 
     if ( callOptions.owner != socket.id ) {
         let idxMic = options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.indexOf("microphone")
         options.interfaceConfigOverwrite.TOOLBAR_BUTTONS.splice(idxMic, 1)
 
-        // options.configOverwrite.startSilent = true
+        options.configOverwrite.startSilent = true
         options.configOverwrite.enableNoAudioDetection = false
         options.configOverwrite.enableNoisyMicDetection = false
     }
