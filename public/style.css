@@ -246,3 +246,60 @@ main {
   border-radius: 24px;
   transition: opacity 2s;
 }
+
+
+/* mobile */
+
+@media (max-width: 600px) {
+  #room {
+    background: url('bg2.jpg') no-repeat;
+    background-size: contain;
+  }
+  #meet {
+    width: 100%;
+    margin-top: 34vh;
+    height: 35vh;
+    right: 0;
+  }
+  #infoBeforeMeet {
+    padding: 1em;
+  }
+  #chat {
+    width: 100%;
+    right: 0;
+    position: absolute;
+    bottom: 0;
+    height: 30vh;
+  }
+  #chatRead {
+    height: 25vh;
+  }
+  #info ul {
+    width: 100%;
+    padding: 1em 0;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  .pj {
+    width: 8%;
+    padding: 4vw 0;
+    line-height: 1vw;
+    font-size: 3.9vw;
+  }
+  #serParlanteWrapper {
+    right: 0;
+    bottom: 0;
+    width: 100%;
+  }
+  #serParlanteWindow {
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 7vh 4vw;
+    box-sizing: border-box;
+  }
+  #btnSerParlante {
+    bottom: 5px;
+    right: 10px;
+  }
+}
