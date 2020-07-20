@@ -1,20 +1,22 @@
 /* Variables */
 
-$lila: #d8bfdd;
-$gris: #d7d7d7;
-$gris_medio: #9e9e9e;
-$gris_oscuro: #686868;
-$amarillo: #f1ff90;
-$cyan1: #1aa4c4;
-$cyan2: #80ffc1;
-$magenta: #ff22c8;
-$negro: #351c40;
-$verde_oscuro: #4e6844;
+$lila         : #d8bfdd;
+$violeta      : #6A2C9C;
+$gris         : #d7d7d7;
+$gris_medio   : #9e9e9e;
+$gris_oscuro  : #686868;
+$amarillo     : #f1ff90;
+$cyan1        : #1aa4c4;
+$cyan2        : #80ffc1;
+$magenta      : #ff22c8;
+$negro        : #351c40;
+$verde_oscuro : #4e6844;
+$petroleo     : #629CA4;
 
-$num-colors: 100;
-$base-color: $lila;
-$spectrum: 360deg;
-$offset:50deg;
+$num-colors : 100;
+$base-color : $lila;
+$spectrum   : 360deg;
+$offset     : 50deg;
 
 @mixin random-bgr(){
   $color: rgb(random(255), random(255), random(255));
@@ -27,9 +29,38 @@ $offset:50deg;
   border: 1px solid $color1;
 }
 
+// Gradientes
+
+$gradients: () !default;
+$gradients: map-merge((
+    noche: linear-gradient(135deg, $cyan2 0%,$petroleo 100%),
+    dia: linear-gradient(135deg, $amarillo 0%, $lila 100%),
+    trippy: linear-gradient(135deg, $violeta 0%, $cyan1 25%, $petroleo 50%, $amarillo 75%, $cyan1 100%)
+), $gradients);
+
+@mixin bg-gradient($parent, $gradient) {
+  #{$parent} {
+    background: $gradient;
+  }
+}
+
+@each $gradient, $value in $gradients {
+ @include bg-gradient(".bg-gradient-#{$gradient}", $value);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(5);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+
+
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Nova Mono', monospace;
   overflow: hidden;
   background-color: black;
 }
@@ -83,6 +114,11 @@ header {
     }
   }
 
+  &#pjPrincipal{
+    animation: pulse 5s 1;
+
+  }
+
 }
 
 .adminOfArea {
@@ -105,8 +141,8 @@ header {
 #room {
   width: 100%;
   height: 100%;
-  background: url('bg.jpg') no-repeat;
-  background-size: 100%;
+  background: url('bg2.jpg') no-repeat;
+  background-size: contain;
 }
 
 #infoBeforeMeet img {
@@ -119,8 +155,9 @@ header {
   ul {
     list-style: none;
     font-size: 0.9em;
-    width: 29%;
+    width: auto;
     margin: 0 auto;
+    display: inline-block;
     padding: 1em;
     border-radius: 3px;
     text-align: left;
@@ -142,20 +179,22 @@ header {
   width: 45%;
   background-color: $lila;
   position: absolute;
-  right: 0.5%;
-  top: 1%;
-  height: 54%;
+  right: 0;
+  top: 0;
+  height: 50vh;
   box-sizing: border-box;
 }
 
 #chat {
   position: absolute;
-  bottom: 1%;
-  right: 0.5%;
+  bottom: 0;
+  right: 0;
   width: 45%;
-  height: 43%;
+  height: 45vh;
   background-color: #ffffffc4;
   box-sizing: border-box;
+  box-shadow: -1em -1em 0 transparentize($petroleo, .6);
+  border: 1vw solid $lila;
 }
 
 #chatWrite {
@@ -164,6 +203,7 @@ header {
   width: 100%;
   padding: 0 1em;
   box-sizing: border-box;
+  border-top: dashed 1px $petroleo;
   > span {
     margin-top: 3px;
   }
@@ -174,6 +214,7 @@ header {
     box-sizing: border-box;
     background: none;
     font-size: inherit;
+    font-family: inherit;
     &:focus {
       border: 0;
       outline: none;
@@ -187,7 +228,7 @@ header {
   /* color: #040404; */
   /* font-family: 'Courier New', mono; */
   overflow-y: auto;
-  height: 92%;
+  height: 90%;
   box-sizing: border-box;
   .nombre {
     color: $gris_oscuro;
@@ -208,8 +249,9 @@ header {
   height: 100%;
   text-align: center;
   box-sizing: border-box;
-  padding-top: 2em;
-  border: 1vw solid $lila;
+  padding-top: 1em;
+  box-shadow: -1em 1em 0 $lila;
+  border: 1vw solid $petroleo;
 }
 
   #login {
@@ -220,20 +262,25 @@ header {
     input {
       font-family: inherit;
       font-size: 1em;
+      width: 100%;
+      background-color: transparent;
+      border: solid 2px $petroleo;
+      color: $violeta;
+      padding: .5em;
     }
   }
 
-  .button {
-    margin-top: 4%;
-    background-color: $cyan2;
-    border: none;
-    padding: 6px 27px;
-    font-size: 1.1em;
-    text-transform: uppercase;
-    box-shadow: 4px 4px $gris_medio;
-    cursor: pointer;
-    font-size: 0.9em;
-  }
+.button {
+  margin-top: 4%;
+  background-color: $cyan2;
+  border: none;
+  padding: 6px 27px;
+  font-size: 1.1em;
+  text-transform: uppercase;
+  box-shadow: 4px 4px $gris_medio;
+  cursor: pointer;
+  font-size: 0.9em;
+}
 
 .button:active {
   position: relative;
@@ -376,34 +423,52 @@ header {
 /* mobile */
 
 @media (max-width: 600px) {
+  header {
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: block;
+    h1 {
+      display: none;
+    }
+    nav {
+      width: fit-content;
+    }
+  }
   #room {
     background: url('bg2.jpg') no-repeat;
     background-size: contain;
   }
   #meet {
-    width: 100%;
-    margin-top: 34vh;
-    height: 35vh;
-    right: 0;
-  }
-  #infoBeforeMeet {
-    padding: 1em;
+    iframe {
+      width: 100%;
+    }
+    #login {
+      width: 80%;
+      margin: 0 auto 0;
+      padding: .5em 0;
+      input {
+        padding: 0 0.5em;
+      }
+    }
   }
   #chat {
-    width: 100%;
-    right: 0;
-    position: absolute;
-    bottom: 0;
-    height: 30vh;
+    height: 50vh;
+    box-shadow: none;
+    border: none;
+    #chatRead {
+      font-size: .8em;
+      padding: .5em;
+      height: 85%;
+    }
   }
-  #chatRead {
-    height: 25vh;
+  #infoBeforeMeet {
+    padding: .5em;
+    box-shadow: none;
   }
   #info ul {
-    width: 100%;
-    padding: 1em 0;
-    text-align: center;
-    box-sizing: border-box;
+    padding: .5em 0;
+    font-size: .6em;
   }
   .pj {
     width: 8%;
@@ -417,14 +482,36 @@ header {
     width: 100%;
   }
   #serParlanteWindow {
-    bottom: 0;
-    right: 0;
-    left: 0;
-    padding: 7vh 4vw;
+    padding: 4vw;
     box-sizing: border-box;
+    width: 100%;
   }
   #btnSerParlante {
     bottom: 5px;
     right: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  #meet {
+    width: 100%;
+    margin-top: 35vh;
+    height: 35vh;
+    right: 0;
+    #login {
+      width: 80%;
+      margin: 0 auto 0;
+      padding: .5em 0;
+    }
+  }
+  #chat {
+    width: 100%;
+    right: 0;
+    position: absolute;
+    bottom: 0;
+    height: 30vh;
+  }
+  #chatRead {
+    height: 25vh;
   }
 }
