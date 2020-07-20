@@ -550,3 +550,19 @@ socket.on('removeAdminOfArea', (id) => {
   }
   destroyTooltip(id);
 })
+
+// quiero mostrar un bg u otro si es de dia o de noche ;)
+
+function isDay() {
+  const hours = (new Date()).getHours();
+  return hours >= 6 && hours < 18;
+}
+
+window.onload = function() {
+  if (isDay()) {
+    document.querySelector("body").classList.add('bg-gradient-dia')
+  }
+  else {
+    document.querySelector("body").classList.add('bg-gradient-trippy')
+  }
+};
