@@ -380,12 +380,12 @@ main {
     text-align: center;
     box-sizing: border-box;
   }
-  .pj {
+  /* .pj {
     width: 8%;
     padding: 4vw 0;
     line-height: 1vw;
     font-size: 3.9vw;
-  }
+  } */
   #serParlanteWrapper {
     right: 0;
     bottom: 0;

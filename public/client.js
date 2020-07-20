@@ -13,6 +13,7 @@ let $info = document.querySelector('#info')
 let $btnSerParlante = document.querySelector('#btnSerParlante')
 let $serParlanteWrapper = document.querySelector('#serParlanteWrapper')
 let $meet = document.querySelector('#meet')
+let $btnFullScreen = document.querySelector("#btnFullScreen")
 
 let jitsiAPI = null
 const jitsidomain = 'meet.jit.si'
@@ -213,6 +214,13 @@ $btnLogin.addEventListener('click', (ev) => {
 
   user.joinedWorld = true
 })
+
+// $btnFullScreen.addEventListener("click", (ev) =>{
+//     var elem = document.querySelector("main");
+//     if (elem.requestFullscreen) {
+//       elem.requestFullscreen();
+//     }
+// })
 
 // Oculto o muestro la config
 $btnSerParlante.addEventListener('click', function (e) {
