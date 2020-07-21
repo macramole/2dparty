@@ -347,13 +347,36 @@ main {
   transition: visibility 0s linear 300ms, opacity 300ms;
 }
 
+.btnMovimiento {
+    visibility: hidden;
+    position: absolute;
+}
+#btnLeft {
+    left: 0;
+    top: 50%;
+}
+#btnRight {
+    left: 51%;
+    top: 50%;
+}
+#btnUp {
+    left: 25%;
+    top: 0;
+}
+#btnDown {
+    left: 25%;
+    bottom: 0;
+}
+
 
 /* mobile */
 
 @media (max-width: 600px) {
   #room {
-    background: url('bg2.jpg') no-repeat;
-    background-size: contain;
+    /* background: url('bg2.jpg') no-repeat; */
+    background: url('bg3.jpg') no-repeat;
+    background-size: cover;
+    height: 35vh;
   }
   #meet {
     width: 100%;
@@ -370,6 +393,7 @@ main {
     position: absolute;
     bottom: 0;
     height: 30vh;
+    visibility: hidden;
   }
   #chatRead {
     height: 25vh;
@@ -401,5 +425,27 @@ main {
   #btnSerParlante {
     bottom: 5px;
     right: 10px;
+  }
+  #nav {
+      visibility: hidden;
+  }
+
+  #btnLeft {
+      left: 0;
+      top: 15%;
+  }
+  #btnRight {
+      right: 0;
+      top: 15%;
+      left: auto;
+  }
+  #btnUp {
+      left: 50%;
+      top: 0;
+  }
+  #btnDown {
+      left: 50%;
+      top: 30%;
+      bottom: auto;
   }
 }
