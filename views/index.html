@@ -5,10 +5,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>2 D ~ P A R T Y</title>
 	<link rel="stylesheet" href="main.css">
+	<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Nova+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
+  <header id="header">
     <h1>2DPARTY</h1>
     <nav>
       <!--button id="btnSerParlante" class='button'> configuración </button-->
@@ -60,26 +61,33 @@
 			<button type="button" class="btnMovimiento" data-key="ArrowDown" id="btnDown"><i class="fas fa-arrow-down"></i></button>
 			<button type="button" class="btnMovimiento" data-key="ArrowLeft" id="btnLeft"><i class="fas fa-arrow-left"></i></button>
 		</div>
-		<aside id="meet">
-			<!-- <button type="button" id="btnFullScreen">full</button> -->
-			<div id="infoBeforeMeet">
-				<img src="2dparty.jpg" alt="Logo 2DParty">
-				<div id="login">
-					<input type="text" id="txtNombre" placeholder="Nombre"><br>
-					<button type="button" class="button" id="btnLogin"><i class="fas fa-play"></i> Entrar</button>
+
+		<div id="sidebar">
+			<div id="barraX"></div>
+
+			<aside id="meet">
+				<!-- <button type="button" id="btnFullScreen">full</button> -->
+				<div id="infoBeforeMeet">
+					<img src="2dparty.jpg" alt="Logo 2DParty">
+					<div id="login">
+						<input type="text" id="txtNombre" placeholder="Nombre"><br>
+						<button type="button" class="button" id="btnLogin"><i class="fas fa-play"></i> Entrar</button>
+					</div>
+					<div id="info">
+						<ul>
+							<li><i class="fas fa-keyboard fa-fw"></i> <span>Usá las flechitas para moverte</span></li>
+							<li><i class="fas fa-comments fa-fw"></i> <span>Acercate a alguien para hablarle</span></li>
+						</ul>
+					</div>
 				</div>
-				<div id="info">
-					<ul>
-						<li><i class="fas fa-keyboard fa-fw"></i> <span>Usá las flechitas para moverte</span></li>
-						<li><i class="fas fa-comments fa-fw"></i> <span>Acercate a alguien para hablarle</span></li>
-					</ul>
+			</aside>
+			
+			<div id="chat">
+				<div id="barraY"></div>
+				<div id="chatRead"></div>
+				<div id="chatWrite">
+					<span>&gt;</span> <input type="text" placeholder="Chateá acá"/>
 				</div>
-			</div>
-		</aside>
-		<div id="chat">
-			<div id="chatRead"></div>
-			<div id="chatWrite">
-				<span>&gt;</span> <input type="text" placeholder="Chateá acá"/>
 			</div>
 		</div>
 	</main>
@@ -88,5 +96,6 @@
 	<script src="https://kit.fontawesome.com/47fb641f90.js" crossorigin="anonymous"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="client.js"></script>
+	<script src="resize.js"></script>
 </body>
 </html>
