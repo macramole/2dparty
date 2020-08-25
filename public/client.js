@@ -415,8 +415,8 @@ socket.on('start call', (callOptions) => {
 
   const options = {
     roomName: callOptions.id,
-    width: window.innerWidth * 0.45,
-    height: window.innerHeight * 0.54,
+    width: "100%",
+    height: "100%",
     parentNode: $meet,
     userInfo: {
       displayName: user.nombre,

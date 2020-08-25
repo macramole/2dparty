@@ -516,8 +516,6 @@ header {
   height: 50vh;
   min-height: 10vh;
   max-height: 90vh; }
-  #meet iframe {
-    width: 100% !important; }
 
 #chat {
   width: 100%;
