@@ -41,7 +41,8 @@ header {
     background-color: #d8bfdd;
     padding: 0.3% 1%;
     border-radius: 3px;
-    color: #351c40; }
+    color: #351c40;
+    display: none; }
 
 #serParlanteWrapper {
   display: inline; }
