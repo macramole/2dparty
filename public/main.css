@@ -4,7 +4,6 @@
     transform: scale(5); }
   50% {
     transform: scale(1); } }
-
 @keyframes broadcasting {
   0% {
     transform: scale(1); }
@@ -12,7 +11,6 @@
     transform: scale(1.2); }
   100% {
     transform: scale(1.5); } }
-
 body {
   margin: 0;
   overflow: hidden;
@@ -61,411 +59,11 @@ header {
   box-sizing: border-box;
   transition: left 0.05s, top 0.05s;
   user-select: none;
-  font-family: 'Nova Mono', monospace; }
-  .pj:nth-child(0) {
-    background-color: #01afa8;
-    color: #ffb0b4;
-    box-shadow: 2px 2px #8118fe; }
-  .pj:nth-child(1) {
-    background-color: #e1fc07;
-    color: white;
-    box-shadow: 2px 2px #6cfdc5; }
-  .pj:nth-child(2) {
-    background-color: #3d3111;
-    color: #758fd8;
-    box-shadow: 2px 2px #288c40; }
-  .pj:nth-child(3) {
-    background-color: #9c7367;
-    color: white;
-    box-shadow: 2px 2px #aec4a5; }
-  .pj:nth-child(4) {
-    background-color: #8a1098;
-    color: #b8f7b0;
-    box-shadow: 2px 2px #e87326; }
-  .pj:nth-child(5) {
-    background-color: #0d030b;
-    color: #36d95f;
-    box-shadow: 2px 2px #634f13; }
-  .pj:nth-child(6) {
-    background-color: #3411ba;
-    color: #f2fbcf;
-    box-shadow: 2px 2px #ee4375; }
-  .pj:nth-child(7) {
-    background-color: #3f7314;
-    color: #c799ed;
-    box-shadow: 2px 2px #23c2ca; }
-  .pj:nth-child(8) {
-    background-color: black;
-    color: #e3e006;
-    box-shadow: 2px 2px #4e0229; }
-  .pj:nth-child(9) {
-    background-color: #6dcb94;
-    color: white;
-    box-shadow: 2px 2px #b8bce6; }
-  .pj:nth-child(10) {
-    background-color: #1a3714;
-    color: #c07bcf;
-    box-shadow: 2px 2px #2f6882; }
-  .pj:nth-child(11) {
-    background-color: #3ed37f;
-    color: white;
-    box-shadow: 2px 2px #9197e6; }
-  .pj:nth-child(12) {
-    background-color: #0d5dd6;
-    color: #fdf4e5;
-    box-shadow: 2px 2px #f554e5; }
-  .pj:nth-child(13) {
-    background-color: #4b1e13;
-    color: #7ecbdf;
-    box-shadow: 2px 2px #4a9d27; }
-  .pj:nth-child(14) {
-    background-color: #688321;
-    color: #c6b6ed;
-    box-shadow: 2px 2px #3cceae; }
-  .pj:nth-child(15) {
-    background-color: #d5499e;
-    color: white;
-    box-shadow: 2px 2px #e8e09c; }
-  .pj:nth-child(16) {
-    background-color: #c4015b;
-    color: #c5ffe4;
-    box-shadow: 2px 2px #f7fe2d; }
-  .pj:nth-child(17) {
-    background-color: #59c174;
-    color: white;
-    box-shadow: 2px 2px #a3b1dd; }
-  .pj:nth-child(18) {
-    background-color: #55019f;
-    color: #ccfea1;
-    box-shadow: 2px 2px #fd1109; }
-  .pj:nth-child(19) {
-    background-color: #842f1b;
-    color: #afe2ef;
-    box-shadow: 2px 2px #63d530; }
-  .pj:nth-child(20) {
-    background-color: #520534;
-    color: #61f59b;
-    box-shadow: 2px 2px #b2a00b; }
-  .pj:nth-child(21) {
-    background-color: #6ab4ab;
-    color: white;
-    box-shadow: 2px 2px #bdaed6; }
-  .pj:nth-child(22) {
-    background-color: #80580d;
-    color: #98b8f4;
-    box-shadow: 2px 2px #17dc36; }
-  .pj:nth-child(23) {
-    background-color: #440c5d;
-    color: #9dee7a;
-    box-shadow: 2px 2px #b73818; }
-  .pj:nth-child(24) {
-    background-color: #2f1a69;
-    color: #d2e69c;
-    box-shadow: 2px 2px #ba2f50; }
-  .pj:nth-child(25) {
-    background-color: #735244;
-    color: #d2dfe4;
-    box-shadow: 2px 2px #7dac71; }
-  .pj:nth-child(26) {
-    background-color: #02398b;
-    color: #fed18e;
-    box-shadow: 2px 2px #f003d9; }
-  .pj:nth-child(27) {
-    background-color: #377c9b;
-    color: #f3e4de;
-    box-shadow: 2px 2px #b96dcb; }
-  .pj:nth-child(28) {
-    background-color: #6afff5;
-    color: white;
-    box-shadow: 2px 2px #e5d0ff; }
-  .pj:nth-child(29) {
-    background-color: #69d7dd;
-    color: white;
-    box-shadow: 2px 2px #d9bcf0; }
-  .pj:nth-child(30) {
-    background-color: #33633d;
-    color: #dcb9d5;
-    box-shadow: 2px 2px #556da7; }
-  .pj:nth-child(31) {
-    background-color: #46270e;
-    color: #70afe3;
-    box-shadow: 2px 2px #249c1e; }
-  .pj:nth-child(32) {
-    background-color: #9b1b91;
-    color: #c1f4c5;
-    box-shadow: 2px 2px #dd9a3f; }
-  .pj:nth-child(33) {
-    background-color: #bf6c76;
-    color: white;
-    box-shadow: 2px 2px #cedeb3; }
-  .pj:nth-child(34) {
-    background-color: #5a1112;
-    color: #82e8e6;
-    box-shadow: 2px 2px #6bb021; }
-  .pj:nth-child(35) {
-    background-color: #3c5d47;
-    color: #d7c1d0;
-    box-shadow: 2px 2px #646e9b; }
-  .pj:nth-child(36) {
-    background-color: #38392b;
-    color: #a8a6bd;
-    box-shadow: 2px 2px #567467; }
-  .pj:nth-child(37) {
-    background-color: #370a2a;
-    color: #5de385;
-    box-shadow: 2px 2px #8e7719; }
-  .pj:nth-child(38) {
-    background-color: #496c13;
-    color: #b593eb;
-    box-shadow: 2px 2px #23c2b1; }
-  .pj:nth-child(39) {
-    background-color: #046219;
-    color: #f96cda;
-    box-shadow: 2px 2px #083cc4; }
-  .pj:nth-child(40) {
-    background-color: #550281;
-    color: #affd85;
-    box-shadow: 2px 2px #e62603; }
-  .pj:nth-child(41) {
-    background-color: #3d5647;
-    color: #d2c0cb;
-    box-shadow: 2px 2px #676b92; }
-  .pj:nth-child(42) {
-    background-color: #de679b;
-    color: white;
-    box-shadow: 2px 2px #edf0bb; }
-  .pj:nth-child(43) {
-    background-color: #270628;
-    color: #50e34a;
-    box-shadow: 2px 2px #804614; }
-  .pj:nth-child(44) {
-    background-color: #1d584c;
-    color: #dd97a6;
-    box-shadow: 2px 2px #5736a5; }
-  .pj:nth-child(45) {
-    background-color: #31202a;
-    color: #95bba4;
-    box-shadow: 2px 2px #6f6b48; }
-  .pj:nth-child(46) {
-    background-color: #f253be;
-    color: white;
-    box-shadow: 2px 2px #f9edb2; }
-  .pj:nth-child(47) {
-    background-color: #125b93;
-    color: #f5cdaf;
-    box-shadow: 2px 2px #d926e5; }
-  .pj:nth-child(48) {
-    background-color: #56be31;
-    color: #f9f2fc;
-    box-shadow: 2px 2px #79c5dc; }
-  .pj:nth-child(49) {
-    background-color: #726702;
-    color: #7684fd;
-    box-shadow: 2px 2px #03d757; }
-  .pj:nth-child(50) {
-    background-color: #cb186e;
-    color: #e6fcf1;
-    box-shadow: 2px 2px #eaec5d; }
-  .pj:nth-child(51) {
-    background-color: black;
-    color: #b62959;
-    box-shadow: 2px 2px #140d39; }
-  .pj:nth-child(52) {
-    background-color: #0d2b9b;
-    color: #f8e9af;
-    box-shadow: 2px 2px #ec22b2; }
-  .pj:nth-child(53) {
-    background-color: #6064e8;
-    color: white;
-    box-shadow: 2px 2px #f5b9d9; }
-  .pj:nth-child(54) {
-    background-color: #273ec3;
-    color: #fcf9ee;
-    box-shadow: 2px 2px #e26eb9; }
-  .pj:nth-child(55) {
-    background-color: #504808;
-    color: #6877ef;
-    box-shadow: 2px 2px #12ac4e; }
-  .pj:nth-child(56) {
-    background-color: black;
-    color: #a02727;
-    box-shadow: 2px 2px #170925; }
-  .pj:nth-child(57) {
-    background-color: #6e7827;
-    color: #bcb7e7;
-    box-shadow: 2px 2px #43c292; }
-  .pj:nth-child(58) {
-    background-color: #ab09cb;
-    color: #dcfdd6;
-    box-shadow: 2px 2px #f77f43; }
-  .pj:nth-child(59) {
-    background-color: #250c06;
-    color: #48c2e2;
-    box-shadow: 2px 2px #337d14; }
-  .pj:nth-child(60) {
-    background-color: #0f0c4f;
-    color: #e5ea70;
-    box-shadow: 2px 2px #a8195b; }
-  .pj:nth-child(61) {
-    background-color: #37972d;
-    color: #eed2f1;
-    box-shadow: 2px 2px #5ca0ce; }
-  .pj:nth-child(62) {
-    background-color: #450930;
-    color: #62eb93;
-    box-shadow: 2px 2px #a08c14; }
-  .pj:nth-child(63) {
-    background-color: #03112b;
-    color: #efb33e;
-    box-shadow: 2px 2px #890b75; }
-  .pj:nth-child(64) {
-    background-color: #55ad75;
-    color: white;
-    box-shadow: 2px 2px #9aa1ce; }
-  .pj:nth-child(65) {
-    background-color: #25696f;
-    color: #e4b3af;
-    box-shadow: 2px 2px #873ebc; }
-  .pj:nth-child(66) {
-    background-color: #2a371f;
-    color: #ac93c2;
-    box-shadow: 2px 2px #447678; }
-  .pj:nth-child(67) {
-    background-color: #63750c;
-    color: #9e8df3;
-    box-shadow: 2px 2px #16d194; }
-  .pj:nth-child(68) {
-    background-color: #9954e6;
-    color: white;
-    box-shadow: 2px 2px #f3adaf; }
-  .pj:nth-child(69) {
-    background-color: #8d932d;
-    color: #d1cff0;
-    box-shadow: 2px 2px #5acc99; }
-  .pj:nth-child(70) {
-    background-color: #545760;
-    color: #dcdbd7;
-    box-shadow: 2px 2px #958591; }
-  .pj:nth-child(71) {
-    background-color: #06157a;
-    color: #f9ea86;
-    box-shadow: 2px 2px #dc0a8f; }
-  .pj:nth-child(72) {
-    background-color: #24091a;
-    color: #58d486;
-    box-shadow: 2px 2px #756a1e; }
-  .pj:nth-child(73) {
-    background-color: #ce7c45;
-    color: white;
-    box-shadow: 2px 2px #9ee396; }
-  .pj:nth-child(74) {
-    background-color: #270627;
-    color: #4be14b;
-    box-shadow: 2px 2px #7e4a15; }
-  .pj:nth-child(75) {
-    background-color: #091a2f;
-    color: #dea459;
-    box-shadow: 2px 2px #841a7d; }
-  .pj:nth-child(76) {
-    background-color: #5f8216;
-    color: #bfa7f0;
-    box-shadow: 2px 2px #24daba; }
-  .pj:nth-child(77) {
-    background-color: #3b7fe2;
-    color: white;
-    box-shadow: 2px 2px #ef94e7; }
-  .pj:nth-child(78) {
-    background-color: #37167d;
-    color: #d7efa3;
-    box-shadow: 2px 2px #d42545; }
-  .pj:nth-child(79) {
-    background-color: #222988;
-    color: #eeebbb;
-    box-shadow: 2px 2px #cf4191; }
-  .pj:nth-child(80) {
-    background-color: #54283a;
-    color: #a6d5c2;
-    box-shadow: 2px 2px #929949; }
-  .pj:nth-child(81) {
-    background-color: #564b18;
-    color: #8e9cdf;
-    box-shadow: 2px 2px #2fa556; }
-  .pj:nth-child(82) {
-    background-color: #2d0bf7;
-    color: white;
-    box-shadow: 2px 2px #fa6ea0; }
-  .pj:nth-child(83) {
-    background-color: #156b40;
-    color: #eb94c0;
-    box-shadow: 2px 2px #2525c1; }
-  .pj:nth-child(84) {
-    background-color: #aca552;
-    color: #fefeff;
-    box-shadow: 2px 2px #97cdae; }
-  .pj:nth-child(85) {
-    background-color: #22e4b1;
-    color: white;
-    box-shadow: 2px 2px #987def; }
-  .pj:nth-child(86) {
-    background-color: #c4397a;
-    color: #fdfffe;
-    box-shadow: 2px 2px #dadc87; }
-  .pj:nth-child(87) {
-    background-color: #5b9833;
-    color: #e8d8f2;
-    box-shadow: 2px 2px #66c1cb; }
-  .pj:nth-child(88) {
-    background-color: #46258c;
-    color: #e0efc1;
-    box-shadow: 2px 2px #cf4861; }
-  .pj:nth-child(89) {
-    background-color: #144d56;
-    color: #e39286;
-    box-shadow: 2px 2px #7927a9; }
-  .pj:nth-child(90) {
-    background-color: #3f4525;
-    color: #a79ecb;
-    box-shadow: 2px 2px #498774; }
-  .pj:nth-child(91) {
-    background-color: #10447a;
-    color: #f1c598;
-    box-shadow: 2px 2px #d41cd3; }
-  .pj:nth-child(92) {
-    background-color: #444303;
-    color: #4e52f8;
-    box-shadow: 2px 2px #07a654; }
-  .pj:nth-child(93) {
-    background-color: #706c3a;
-    color: #c7c9e2;
-    box-shadow: 2px 2px #62ae82; }
-  .pj:nth-child(94) {
-    background-color: black;
-    color: #c2a726;
-    box-shadow: 2px 2px #420d31; }
-  .pj:nth-child(95) {
-    background-color: #541348;
-    color: #82e393;
-    box-shadow: 2px 2px #a77d25; }
-  .pj:nth-child(96) {
-    background-color: #f535ee;
-    color: white;
-    box-shadow: 2px 2px #facc96; }
-  .pj:nth-child(97) {
-    background-color: #310530;
-    color: #49ec4c;
-    box-shadow: 2px 2px #8d500f; }
-  .pj:nth-child(98) {
-    background-color: #210b18;
-    color: #61ca8a;
-    box-shadow: 2px 2px #6d6525; }
-  .pj:nth-child(99) {
-    background-color: #0c0912;
-    color: #9eb763;
-    box-shadow: 2px 2px #582933; }
-  .pj#pjPrincipal {
-    animation: pulse 5s 1; }
-    .pj#pjPrincipal.adminOfArea {
-      animation: broadcasting 2s infinite; }
+  background-color: #f1ff90;
+  box-shadow: 2px 2px #ff22c8;
+  color: #1aa4c4; }
+  .pj#pjPrincipal.adminOfArea {
+    animation: broadcasting 2s infinite; }
   .pj.adminOfArea {
     animation: broadcasting 2s infinite; }
 
@@ -482,12 +80,13 @@ header {
 #room {
   width: 100%;
   height: 100%;
-  background: url("bg2.jpg") no-repeat;
+  background: url("bg.jpg") no-repeat;
   background-size: contain; }
 
 #info {
   display: none;
-  margin-top: 0em; }
+  margin-top: 0em;
+  margin-bottom: auto; }
   #info ul {
     list-style: none;
     font-size: 0.9em;
@@ -516,6 +115,8 @@ header {
   height: 50vh;
   min-height: 10vh;
   max-height: 90vh; }
+  #meet iframe {
+    width: 100% !important; }
 
 #chat {
   width: 100%;
@@ -575,15 +176,19 @@ header {
   height: 100%;
   text-align: center;
   box-sizing: border-box;
-  padding-top: 1em;
-  overflow: hidden; }
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: auto auto; }
   #infoBeforeMeet img {
     width: 35%;
-    max-width: 160px; }
+    max-width: 235px;
+    display: block;
+    margin: auto auto 0 auto; }
 
 #login {
   width: 80%;
-  margin: 6em auto 0;
+  margin: 0em auto auto;
   padding: 2em 0; }
   #login input {
     font-family: inherit;
@@ -656,12 +261,14 @@ header {
   min-width: 250px; }
   #serParlanteWindow p {
     margin: 0;
-    margin-bottom: 1em; }
+    margin-bottom: 1em;
+    text-align: justify;
+    line-height: 1.3em; }
     #serParlanteWindow p.permitir {
       margin: 0.2em;
       text-align: center;
       text-transform: uppercase;
-      font-size: 0.8em; }
+      font-size: 0.9em; }
   #serParlanteWindow:before {
     content: '';
     position: absolute;
@@ -687,14 +294,14 @@ header {
     display: flex;
     margin-bottom: 0.5em;
     padding: 0 1%; }
-  #serParlanteWindow > div {
-    flex: 1;
-    background-color: #d7d7d7;
-    padding: 3px;
-    border-radius: 5px;
-    margin: 0 2%; }
+    #serParlanteWindow .allowables > div {
+      flex: 1;
+      background-color: #d7d7d7;
+      padding: 3px;
+      border-radius: 5px;
+      margin: 0 2%; }
   #serParlanteWindow .audioFilters {
-    margin-bottom: 0.5em;
+    margin-bottom: 1em;
     text-align: center; }
     #serParlanteWindow .audioFilters label {
       position: relative;
@@ -779,12 +386,14 @@ header {
 @media (max-width: 600px) {
   html, body {
     height: 100%; }
+
   main {
     height: 100%;
     width: 100%;
     max-width: 100%;
     min-width: 100%;
     overflow: auto; }
+
   header {
     top: 0;
     left: 0;
@@ -794,8 +403,10 @@ header {
       display: none; }
     header nav {
       width: fit-content; }
-  #barraX, #barraY {
+
+  #barraX, #barraY, nav {
     display: none; }
+
   #sidebar {
     width: 100%;
     max-width: 100%;
@@ -805,12 +416,14 @@ header {
     display: flex;
     flex-flow: column;
     min-height: 50vh; }
+
   #room {
     background: url("bg2.jpg") no-repeat;
     background-size: cover;
     height: 50vh !important;
     overflow: auto;
     position: relative; }
+
   #meet {
     position: static;
     height: auto;
@@ -822,6 +435,7 @@ header {
       padding: .5em 0; }
       #meet #login input {
         padding: 0 0.5em; }
+
   #chat {
     position: static;
     height: auto;
@@ -835,46 +449,52 @@ header {
       flex: 2; }
     #chat #chatWrite {
       position: static; }
+
   #infoBeforeMeet {
     padding: .5em;
     box-shadow: none; }
+
   #info ul {
     padding: .5em 0; }
-  .pj {
-    width: 8%;
-    padding: 4vw 0;
-    line-height: 1vw;
-    font-size: 3.9vw; }
+
   #serParlanteWrapper {
     right: 0;
     bottom: 0;
     width: 100%; }
+
   #serParlanteWindow {
     padding: 4vw;
     box-sizing: border-box;
     width: 100%; }
+
   #btnSerParlante {
     bottom: 5px;
     right: 10px; }
+
   .btnMovimiento {
     visibility: visible;
     position: absolute; }
+
   #btnLeft {
     left: 5px;
     top: calc(50% - 21px); }
+
   #btnRight {
     right: 5px;
     top: calc(50% - 21px);
     left: auto; }
+
   #btnUp {
     left: calc(50% - 21px);
     top: 5px; }
+
   #btnDown {
     left: calc(50% - 21px);
     bottom: 5px; } }
-
 @media (max-width: 400px) {
   #meet #login {
     width: 80%;
     margin: 0 auto 0;
     padding: .5em 0; } }
+
+/*# sourceMappingURL=main.css.map */
