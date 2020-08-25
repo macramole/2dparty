@@ -10,7 +10,7 @@ let serverVersion
 app.use(express.static('public'))
 
 app.get('/', function (req, res) {
-    if ( !req.secure && process.env.NODE_ENV ) {
+    if ( process.env.NODE_ENV && req.headers["x-forwarded-proto"] !== "https" ) {
         res.redirect(302, "https://" + req.hostname + req.originalUrl)
     } else {
         res.sendFile(__dirname + '/views/index.html')
