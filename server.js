@@ -13,8 +13,9 @@ app.use(express.static('public'))
 app.get('/', function (req, res) {
     if ( !req.secure && process.env.NODE_ENV ) {
         res.redirect(status, "https://" + req.hostname + req.originalUrl)
+    } else {
+        res.sendFile(__dirname + '/views/index.html')
     }
-  res.sendFile(__dirname + '/views/index.html')
 })
 
 let port = process.env.PORT || 3000
