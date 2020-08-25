@@ -3,12 +3,17 @@ const app = express()
 const http = require('http').createServer(app)
 const sanitizeHtml = require('sanitize-html')
 const linkifyHtml = require('linkifyjs/html')
+const sslRedirect = require('heroku-ssl-redirect');
 // esto se setea cuando arranca el server y actualiza a los clientes si es necesario
 let serverVersion
+
 
 app.use(express.static('public'))
 
 app.get('/', function (req, res) {
+    if ( !req.secure && process.env.NODE_ENV ) {
+        res.redirect(status, "https://" + req.hostname + req.originalUrl)
+    }
   res.sendFile(__dirname + '/views/index.html')
 })
 
