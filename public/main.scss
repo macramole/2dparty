@@ -209,7 +209,7 @@ header {
 }
 
 #chatWrite {
-  position: absolute;
+  // position: absolute;
   bottom: 0;
   display: flex;
   align-items: center;
@@ -237,7 +237,7 @@ header {
 
 #chatRead {
   font-size: 1em;
-  padding: 0.9em 1em 3em;
+  padding: 0.5em 1em;
   /* font-family: 'Courier New', mono; */
   overflow-y: auto;
   height: 100%;
