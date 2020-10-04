@@ -45,6 +45,8 @@ const roomPaddingTop = 0 //absoluto
 const roomPaddingBottom = 0 //absoluto
 const roomPaddingRight = 0.55 //porcentaje
 
+let chatIsFocused = false;
+
 function moveAllPJsToCoords() {
     let $pjs = document.querySelectorAll('.pj')
 
@@ -123,7 +125,8 @@ window.addEventListener('resize', (ev) => {
 })
 
 window.addEventListener('keydown', (ev) => {
-  if (!user.joinedWorld) return
+  if (ev.key === "Escape") $chatWrite.blur();
+  if (!user.joinedWorld || chatIsFocused) return
 
   if (
     ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(ev.key) != -1 &&
@@ -165,6 +168,13 @@ window.addEventListener('click', function (e) {
 
 $room.addEventListener('click', (ev) => {
   $chatWrite.focus()
+})
+
+$chatWrite.addEventListener('focus', (ev) => {
+  chatIsFocused = true
+})
+$chatWrite.addEventListener('blur', (ev) => {
+  chatIsFocused = false
 })
 
 $chatWrite.addEventListener('keydown', (ev) => {
