@@ -2,16 +2,25 @@ const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
 const sanitizeHtml = require('sanitize-html')
+const linkifyHtml = require('linkifyjs/html')
+// esto se setea cuando arranca el server y actualiza a los clientes si es necesario
+let serverVersion
+
 
 app.use(express.static('public'))
 
 app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/views/index.html')
+    if ( process.env.NODE_ENV && req.headers["x-forwarded-proto"] !== "https" ) {
+        res.redirect(302, "https://" + req.hostname + req.originalUrl)
+    } else {
+        res.sendFile(__dirname + '/views/index.html')
+    }
 })
 
 let port = process.env.PORT || 3000
 http.listen(port, function () {
-  console.log(`Example app listening on port ${port}!`)
+    serverVersion = makeCallID();
+    console.log(`2 D ~ P A R T Y -- listening on port ${port}!`)
 })
 
 //////////////////////////////
@@ -32,24 +41,44 @@ function makeCallID() {
   return result
 }
 
-function startCall(to, callID, options = {}) {
-  if (callID == null) {
-    callID = makeCallID()
+function startCall(to, callInfo = null) {
+  if (callInfo == null) {
+      callInfo = {
+          id : makeCallID(),
+          mic : true,
+          video : true
+      }
+  } else if ( callInfo.id == null ) {
+      callInfo.id = makeCallID()
+
+      if ( users[to].isAdminOfArea ) {
+          callInfo.owner = to
+      }
   }
-  io.sockets.sockets[to].join(callID)
-  users[to].callID = callID
 
-  options.callID = callID
+  io.sockets.sockets[to].join(callInfo.id)
+  users[to].callInfo = callInfo
 
-  io.to(to).emit('start call', options)
+  io.to(to).emit('start call', callInfo)
 
-  return callID
+  // console.log("startCall", to, callInfo)
+
+  return callInfo
+}
+
+function destroyRoom(roomName) {
+    var clients = io.sockets.adapter.rooms[roomName].sockets;
+    for ( let clientID in clients ) {
+        endCall(clientID)
+    }
 }
 
 function endCall(to) {
-  io.to(to).emit('end call')
-  io.sockets.sockets[to].leave(users[to].callID)
-  users[to].callID = null
+    if ( io.sockets.sockets[to] ) {
+        io.to(to).emit('end call')
+        io.sockets.sockets[to].leave(users[to].callInfo.id)
+        users[to].callInfo = null
+    }
 }
 
 function getPeopleNear(userID) {
@@ -81,15 +110,18 @@ function getPeopleNear(userID) {
 }
 
 function checkLeftAlone(userID) {
-  //si eran dos y el otro quedó solo deberia desconectarlo
+  //esto se llama cuando userID se mueve y no quiere dejar solo
+  // a sus amigos
   let cUser = users[userID]
 
   let oneFriend = null
   for (let uid in users) {
     let u = users[uid]
     if (u.id == userID) continue
-    if (u.isAdminOfArea) break //si hay un admin ya fue no se rompe nunca, puede estar solo el admin
-    if (u.callID == cUser.callID) {
+    if (u.isAdminOfArea) continue //si hay un admin ya fue no se rompe nunca, puede estar solo el admin
+    //si un usuario tiene la misma conversacion y esa conversación no es creada por un parlante
+    if (u.callInfo && cUser.callInfo && u.callInfo.id == cUser.callInfo.id && !u.callInfo.owner) {
+        // si hay mas de uno oneFriend es null
       if (oneFriend == null) {
         oneFriend = u.id
       } else {
@@ -114,22 +146,21 @@ function checkNeedCall(userID) {
 
   //si no hay nadie cerca
   if (nearUsers.length == 0) {
-    if (cUser.callID) {
+    if (cUser.callInfo) {
       // si estaba en una llamada y se fue
-      //(acá deliberadamente no llamo a endCall)
       checkLeftAlone(cUser.id)
       endCall(cUser.id)
     }
   } else {
     //si hay alguien cerca
-    if (cUser.callID == null) {
+    if (cUser.callInfo == null) {
       //si hay gente cerca y no estas en una llamada
       //deberia mirar si los que estan cerca no están en una llamada
       let nearCall = null
 
       for (let otherUserID of nearUsers) {
-        if (users[otherUserID].callID) {
-          nearCall = users[otherUserID].callID
+        if (users[otherUserID].callInfo) {
+          nearCall = users[otherUserID].callInfo
           break
         }
       }
@@ -138,10 +169,10 @@ function checkNeedCall(userID) {
         startCall(cUser.id, nearCall)
       } else {
         // Si el user había creado un room ya tenemos call id
-        let newCallID = startCall(cUser.id, null)
+        let callInfo = startCall(cUser.id)
 
         for (let otherUserID of nearUsers) {
-          startCall(otherUserID, newCallID)
+          startCall(otherUserID, callInfo)
         }
       }
     } else {
@@ -158,13 +189,13 @@ io.on('connection', function (socket) {
         x: users[userID].pos.x,
         y: users[userID].pos.y,
         id: userID,
-        name: users[userID].name ? users[userID].name.substr(0, 1) : '?',
+        // name: users[userID].name ? users[userID].name.substr(0, 1) : '?',
+        name: users[userID].name ? users[userID].name : '?',
       }
       socket.emit('position', pos)
     }
 
-    if (users[userID].areaDescription) {
-      console.log('sending data to users...')
+    if (users[userID].isAdminOfArea) {
       socket.emit('newAdminOfArea', {
         id: userID,
         areaDescription: users[userID].areaDescription,
@@ -172,11 +203,13 @@ io.on('connection', function (socket) {
     }
   }
 
+  socket.emit("serverVersion", serverVersion)
+
   users[socket.id] = {
     id: socket.id,
     isAdminOfArea: false,
     pos: null,
-    callID: null, //esto es el nombre del room en el que está también
+    callInfo: null, //esto es { id: <id>, mic: true/false, video: true/false }
   }
   let user = users[socket.id]
 
@@ -188,35 +221,29 @@ io.on('connection', function (socket) {
     }) //acá habria que pasar el texto. y si el user entra después de que el admin la creó??
     // guardo la descripción
     users[socket.id].areaDescription = opts.areaDescription
+    users[socket.id].isAdminOfArea = true
 
-    if (users[socket.id].callID) {
-      endCall(users[socket.id].callID)
+    if (users[socket.id].callInfo) {
+      endCall(users[socket.id].callInfo.id)
     }
 
-    let callID = startCall(socket.id, null, {
+    let callInfo = startCall(socket.id, {
       mic: opts.allowMics,
       video: opts.allowCams,
+      disableAudioFilters : opts.disableAudioFilters,
+      owner: true
     })
 
-    console.log('created room with id', callID)
+    console.log('created room with id', callInfo.id)
   })
 
   socket.on('destroyArea', function () {
-    //Destruyo el room sólo cuando se va el último user
-    // Que pasa si un adminOfArea se va del room? (por ahora nada con el room)
-    // TODO: acá habria que hacer que heche a todos
     socket.broadcast.emit('removeAdminOfArea', socket.id)
-    var destroyRoom = true
-    for (let userID in users) {
-      if (userID !== socket.id) {
-        if (users[userID].callID === socket.id) {
-          destroyRoom = false
-        }
-      }
-    }
-    if (destroyRoom) {
-      socket.leave(users[socket.id].callID)
-      console.log('destroyed room', socket.id)
+    users[socket.id].isAdminOfArea = false
+
+    //aca podria haber un bug
+    if ( users[socket.id].callInfo && users[socket.id].callInfo.id ) {
+        destroyRoom( users[socket.id].callInfo.id )
     }
   })
 
@@ -234,7 +261,8 @@ io.on('connection', function (socket) {
     user.pos.y = pos.y
 
     pos.id = socket.id
-    pos.name = user.name ? user.name.substr(0, 1) : '?'
+    // pos.name = user.name ? user.name.substr(0, 1) : '?'
+    pos.name = user.name ? user.name : '?'
     socket.broadcast.emit('position', pos)
 
     checkNeedCall(socket.id)
@@ -243,17 +271,24 @@ io.on('connection', function (socket) {
   socket.on('chat', (chatMessage) => {
     if (!chatMessage.message || chatMessage.message.trim() == '') return
 
-    chatMessage = {
-      nombre: chatMessage.nombre ? sanitizeHtml(chatMessage.nombre) : '???',
-      message: chatMessage.message ? sanitizeHtml(chatMessage.message) : '???',
+    forceGlobal = false
+    if ( chatMessage.message.length >= 2 && chatMessage.message.substr(0,2) == "/g" ) {
+        forceGlobal = true
+        chatMessage.message = chatMessage.message.substr(3)
     }
 
-    console.log(chatMessage)
+    chatMessage = {
+      nombre: chatMessage.nombre ? sanitizeHtml(chatMessage.nombre) : '???',
+      message: chatMessage.message ? linkifyHtml(sanitizeHtml(chatMessage.message)) : '???',
+      isRoomChat: false
+    }
+
+    // console.log(chatMessage)
     // Si estás en una llamada manda el msj al room de la llamada
-    if (user.callID) {
-      io.to(socket.rooms[user.callID]).emit('chat', chatMessage)
+    if (user.callInfo && !forceGlobal) {
+        chatMessage.isRoomChat = true
+        io.to(socket.rooms[user.callInfo.id]).emit('chat', chatMessage)
     } else {
-      // Esto se podría dejar de mandar a todx (podría haber un room default?)
       io.emit('chat', chatMessage)
     }
   })
@@ -265,6 +300,5 @@ io.on('connection', function (socket) {
 
     socket.broadcast.emit('user disconnected', socket.id)
     delete users[socket.id]
-    console.log(users)
   })
 })
