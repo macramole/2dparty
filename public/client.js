@@ -47,6 +47,8 @@ const roomPadding = { //porcentaje
     left : 0.005
 }
 
+let chatIsFocused = false;
+
 function moveAllPJsToCoords() {
   let $pjs = document.querySelectorAll('.pj')
 
@@ -133,7 +135,12 @@ window.addEventListener('resize', (ev) => {
 })
 
 window.addEventListener('keydown', (ev) => {
-  if (!user.joinedWorld) return
+  // Si el foco está en el chat, se puede desenfocar apretando la tecla Escape
+  if (ev.key === "Escape" && chatIsFocused) $chatWrite.blur();
+
+  // Si el foco está en el chat y hay algo escrito, prioriza moverse dentro del input de chat, no dentro de la sala
+  if (!user.joinedWorld || (chatIsFocused && $chatWrite.value)) return
+
   if (!socket.connected) {
       addToChat("No estás conectado al servidor. Reconectando...")
       return
@@ -184,10 +191,24 @@ window.addEventListener('click', function (e) {
   }
 })
 
+// Setea el focus en el input de chat al hacer click en los mensajes
+$chatRead.addEventListener('click', (ev) => {
+    if ( !mobileAndTabletCheck() ) {
+      if (!chatIsFocused) $chatWrite.focus()
+    }
+})
+
 $room.addEventListener('click', (ev) => {
     if ( !mobileAndTabletCheck() ) {
-         $chatWrite.focus()
-     }
+      if (chatIsFocused) $chatWrite.blur()
+    }
+})
+
+$chatWrite.addEventListener('focus', (ev) => {
+  chatIsFocused = true
+})
+$chatWrite.addEventListener('blur', (ev) => {
+  chatIsFocused = false
 })
 
 $chatWrite.addEventListener('keydown', (ev) => {
