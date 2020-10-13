@@ -191,12 +191,13 @@ window.addEventListener('click', function (e) {
   }
 })
 
-// Setea el focus en el input de chat al hacer click en los mensajes
-$chatRead.addEventListener('click', (ev) => {
-    if ( !mobileAndTabletCheck() ) {
-      if (!chatIsFocused) $chatWrite.focus()
-    }
-})
+// Setea el focus en el input de chat al hacer doble click en los mensajes
+// Evaluar si esta funcionalidad es deseada?
+// $chatRead.addEventListener('dclick', (ev) => {
+//     if ( !mobileAndTabletCheck() ) {
+//       if (!chatIsFocused) $chatWrite.focus()
+//     }
+// })
 
 $room.addEventListener('click', (ev) => {
     if ( !mobileAndTabletCheck() ) {
