@@ -1,101 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>LaV ~ Laboratorio Virtual</title>
-	<link rel="stylesheet" href="main.css">
-	<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300&display=swap" rel="stylesheet">
-	<!-- <link href="https://fonts.googleapis.com/css2?family=Nova+Mono&display=swap" rel="stylesheet"> -->
-</head>
-<body>
-  <header id="header">
-    <h1>2DPARTY</h1>
-    <nav>
-      <!--button id="btnSerParlante" class='button'> configuración </button-->
-      <div id="serParlanteWrapper">
-        <button id="btnSerParlante" class="iconButton hide"><i class="fas fa-podcast"></i></button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LaV ~ Laboratorio Virtual</title>
+    <link rel="stylesheet" href="main.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Nova+Mono&display=swap" rel="stylesheet"> -->
+  </head>
+  <body>
+    <header id="header">
+      <h1>2DPARTY</h1>
+      <nav>
+        <!--button id="btnSerParlante" class='button'> configuración </button-->
+        <div id="serParlanteWrapper">
+          <button id="btnSerParlante" class="iconButton hide">
+            <i class="fas fa-podcast"></i>
+          </button>
 
-        <div id="serParlanteWindow" class="hide">
-          <p>
-			  Si sos DJ, artista, performer, profe o lo que sea podés participar transmitiendo en vivo.
-			  Ubicate donde más te guste y clickeá el botón de abajo para empezar.
-		  </p>
+          <div id="serParlanteWindow" class="hide">
+            <p>
+              Si sos DJ, artista, performer, profe o lo que sea podés participar
+              transmitiendo en vivo. Ubicate donde más te guste y clickeá el
+              botón de abajo para empezar.
+            </p>
 
-          <p class="permitir">Permitir que los visitantes usen:</p>
-          <div class="allowables">
-            <div>
-              <input type="checkbox" name="allowMics" id="allowMics">
-              <label for="allowMics"><i class="fas fa-microphone-alt"></i> Micrófono</label>
+            <p class="permitir">Permitir que los visitantes usen:</p>
+            <div class="allowables">
+              <div>
+                <input type="checkbox" name="allowMics" id="allowMics" />
+                <label for="allowMics"
+                  ><i class="fas fa-microphone-alt"></i> Micrófono</label
+                >
+              </div>
+              <div>
+                <input
+                  type="checkbox"
+                  name="allowCams"
+                  id="allowCams"
+                  checked="checked"
+                />
+                <label for="allowCams"
+                  ><i class="fas fa-video"></i> Cámara</label
+                >
+              </div>
             </div>
-            <div>
-              <input type="checkbox" name="allowCams" id="allowCams" checked="checked">
-              <label for="allowCams"><i class="fas fa-video"></i> Cámara</label>
+
+            <div class="audioFilters">
+              <input
+                type="checkbox"
+                name="disableAudioFilters"
+                id="disableAudioFilters"
+                checked="checked"
+              />
+              <label
+                for="disableAudioFilters"
+                title="Mejorará la calidad sonora."
+              >
+                <i class="fas fa-broadcast-tower"></i> Deshabilitar filtros de
+                audio
+              </label>
             </div>
-          </div>
 
-		  <div class="audioFilters">
-			  <input type="checkbox" name="disableAudioFilters" id="disableAudioFilters" checked="checked">
-              <label for="disableAudioFilters" title="Mejorará la calidad sonora." >
-				  <i class="fas fa-broadcast-tower"></i> Deshabilitar filtros de audio
-			  </label>
-		  </div>
-
-          <textarea
-            id="areaDescription"
-            placeholder="¿De qué se trata lo que vas a hacer?"
+            <textarea
+              id="areaDescription"
+              placeholder="¿De qué se trata lo que vas a hacer?"
             ></textarea>
 
-          <button id="btnIsAdminOfArea" class="button" type="button">Inaugurar área</button>
+            <button id="btnIsAdminOfArea" class="button" type="button">
+              Inaugurar área
+            </button>
+          </div>
         </div>
-        </div>
-        <button class="iconButton"> <i class="fas fa-question-circle"></i></button>
-    </nav>
-  </header>
-	<main>
-		<div id="room">
-			<div id="pjPrincipal" class="pj"></div>
+        <button class="iconButton">
+          <i class="fas fa-question-circle"></i>
+        </button>
+      </nav>
+    </header>
+    <main>
+      <div id="room">
+        <div id="pjPrincipal" class="pj"></div>
 
-			<button type="button" class="btnMovimiento" data-key="ArrowUp" id="btnUp"><i class="fas fa-arrow-up"></i></button>
+        <!-- <button type="button" class="btnMovimiento" data-key="ArrowUp" id="btnUp"><i class="fas fa-arrow-up"></i></button>
 			<button type="button" class="btnMovimiento" data-key="ArrowRight" id="btnRight"><i class="fas fa-arrow-right"></i></button>
 			<button type="button" class="btnMovimiento" data-key="ArrowDown" id="btnDown"><i class="fas fa-arrow-down"></i></button>
-			<button type="button" class="btnMovimiento" data-key="ArrowLeft" id="btnLeft"><i class="fas fa-arrow-left"></i></button>
-		</div>
+			<button type="button" class="btnMovimiento" data-key="ArrowLeft" id="btnLeft"><i class="fas fa-arrow-left"></i></button> -->
+      </div>
 
-		<div id="sidebar">
-			<div id="barraX"></div>
+      <div id="sidebar">
+        <div id="barraX"></div>
 
-			<aside id="meet">
-				<div id="infoBeforeMeet">
-					<!-- <img src="2dparty.jpg" alt="Logo 2DParty"> -->
-					<img src="lav.png" alt="Logo 2DParty">
-					<div id="login">
-						<input type="text" id="txtNombre" placeholder="Nombre"><br>
-						<button type="button" class="button" id="btnLogin"><i class="fas fa-play"></i> Entrar</button>
-					</div>
-					<div id="info">
-						<ul>
-							<li><i class="fas fa-keyboard fa-fw"></i> <span>Usá las flechitas para moverte</span></li>
-							<li><i class="fas fa-comments fa-fw"></i> <span>Acercate a alguien para hablarle</span></li>
-						</ul>
-					</div>
-				</div>
-			</aside>
+        <aside id="meet">
+          <div id="infoBeforeMeet">
+            <!-- <img src="2dparty.jpg" alt="Logo 2DParty"> -->
+            <img src="lav.png" alt="Logo 2DParty" />
+            <div id="login">
+              <input type="text" id="txtNombre" placeholder="Nombre" /><br />
+              <button type="button" class="button" id="btnLogin">
+                <i class="fas fa-play"></i> Entrar
+              </button>
+            </div>
+            <div id="info">
+              <ul>
+                <li id="teclado">
+                  <i class="fas fa-keyboard fa-fw"></i>
+                  <span>Usá las flechitas para moverte</span>
+                </li>
+                <li>
+                  <i class="fas fa-comments fa-fw"></i>
+                  <span>Acercate a alguien para hablarle</span>
+                </li>
+              </ul>
+            </div>
+            <div class="absolute" id="joystick-container"></div>
+            <label
+              style="display: none"
+              id="sensibilidadLabel"
+              for="sensibilidad"
+              >Sensibilidad del joystick:
+            </label>
+            <input
+              style="display: none;"
+              name="sensibilidad"
+              id="sensibilidad"
+              type="range"
+              min="50"
+              max="350"
+              step="50"
+              value="200"
+            />
+          </div>
+        </aside>
 
-			<div id="chat">
-				<div id="barraY"></div>
-				<div id="chatRead"></div>
-				<div id="chatWrite">
-					<span>&gt;</span> <input type="text" placeholder="Chateá acá"/>
-				</div>
-			</div>
-		</div>
-	</main>
+        <div id="chat">
+          <div id="barraY"></div>
+          <div id="chatRead"></div>
+          <div id="chatWrite">
+            <span>&gt;</span> <input type="text" placeholder="Chateá acá" />
+          </div>
+        </div>
+      </div>
+    </main>
 
-	<script src="https://meet.jit.si/external_api.js"></script>
-	<script src="https://kit.fontawesome.com/47fb641f90.js" crossorigin="anonymous"></script>
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="client.js"></script>
-	<script src="resize.js"></script>
-</body>
+    <script src="https://meet.jit.si/external_api.js"></script>
+    <script
+      src="https://kit.fontawesome.com/47fb641f90.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="joy.min.js"></script>
+    <script src="client.js"></script>
+    <script src="resize.js"></script>
+  </body>
 </html>
