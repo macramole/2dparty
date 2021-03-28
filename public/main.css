@@ -383,7 +383,8 @@ header {
   visibility: hidden; }
 
 /* mobile */
-@media (max-width: 600px) {
+/* Considerando el tamaño de tablets */
+@media (max-width: 768px) {
   html, body {
     height: 100%; }
 

@@ -52,7 +52,7 @@ const joystick = {
   container: undefined,
   instance: undefined,
   intervalId: undefined,
-  interval: 200, // TODO ajustable
+  interval: 200, // Mismo valor que en el html
 };
 
 const roomPadding = {
@@ -108,8 +108,8 @@ function sendPos() {
 }
 
 function setSizes() {
-  // TODO revisar este multiplicador, en mobile se corta un cacho del lado derecho
-  tileSize = window.innerWidth * 0.013; // si se cambia el multiplicador hay que cambiarlo del CSS
+  //  El valor mobile se sacó a ojo
+  tileSize = window.innerWidth * (mobileAndTabletCheck() ? 0.024 : 0.013); // si se cambia el multiplicador hay que cambiarlo del CSS
 
   let $pjs = document.querySelectorAll(".pj");
   for (let i = 0; i < $pjs.length; i++) {
@@ -156,6 +156,10 @@ window.addEventListener("load", (ev) => {
 });
 
 window.addEventListener("resize", (ev) => {
+  if (started) {
+    if (!mobileAndTabletCheck()) $infoBeforeMeet.style.display = "none";
+    else $infoBeforeMeet.style.display = null
+  }
   if (!mobileAndTabletCheck()) {
     unmountJoystick();
     $room.style.height = window.innerHeight + "px";
@@ -348,7 +352,11 @@ function unmountJoystick() {
 }
 
 $sensibilidad.addEventListener("input", (event) => {
-  joystick.interval = Math.abs(Number(event.target.max) - Number(event.target.value) + Number(event.target.min));
+  joystick.interval = Math.abs(
+    Number(event.target.max) -
+      Number(event.target.value) +
+      Number(event.target.min)
+  );
   unmountJoystick();
   mountJoystick();
 });
@@ -600,6 +608,7 @@ socket.on("start call", (callOptions) => {
       displayName: user.nombre,
     },
     configOverwrite: {
+      disableDeepLinking: true,
       enableWelcomePage: false,
     },
     interfaceConfigOverwrite: {
@@ -678,7 +687,7 @@ socket.on("start call", (callOptions) => {
   // console.log(callOptions)
   // console.log(options)
 
-  $infoBeforeMeet.style.display = "none";
+  if (!mobileAndTabletCheck()) $infoBeforeMeet.style.display = "none";
   jitsiAPI = new JitsiMeetExternalAPI(jitsidomain, options);
   if (callOptions.mic === false) {
     if (callOptions.owner != socket.id) {
@@ -704,6 +713,7 @@ socket.on("start call", (callOptions) => {
   addToChat(
     "Entraste a una conversación. Lo que chatees acá sólo lo verá la gente con la que te reuniste. El chat global aparecerá en gris."
   );
+  started = true;
 });
 
 socket.on("end call", () => {
@@ -711,7 +721,8 @@ socket.on("end call", () => {
   user.atArea = AREA_WORLD;
   if (jitsiAPI) jitsiAPI.dispose();
   $infoBeforeMeet.style.display = null;
-
+  
+  started = false;
   addToChat("Te fuiste de la conversación");
 });
 
@@ -740,7 +751,7 @@ socket.on("removeAdminOfArea", (id) => {
   destroyTooltip(id);
 });
 
-window.mobileAndTabletCheck = function () {
+function mobileAndTabletCheck() {
   let check = false;
   (function (a) {
     if (
@@ -754,4 +765,4 @@ window.mobileAndTabletCheck = function () {
       check = true;
   })(navigator.userAgent || navigator.vendor || window.opera);
   return check;
-};
+}
