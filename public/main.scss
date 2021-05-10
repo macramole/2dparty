@@ -500,8 +500,8 @@ header {
 }
 
 /* mobile */
-
-@media (max-width: 600px) {
+/* Esto es para tener en cuenta a celulares más grandes que pueden tener la pantalla rotada */
+@media (max-width: 768px) {
   html, body { height: 100%; }
   main {
     height: 100%;

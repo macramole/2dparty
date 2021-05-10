@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm:sass\" \"npm start\"",
     "start": "node server.js ",
-    "sass": "node-sass -w sass -o public"
+    "sass": "node-sass -w public -o public"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,9 @@
     "linkifyjs": "^2.1.9",
     "node-sass": "^4.14.1",
     "sanitize-html": "^1.23.0",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.4.1"
+  },
+  "devDependencies": {
+    "concurrently": "^6.0.0"
   }
 }
