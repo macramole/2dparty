@@ -22,8 +22,8 @@
   "dependencies": {
     "express": "^4.16.2",
     "linkifyjs": "^2.1.9",
-    "node-sass": "^4.14.1",
-    "sanitize-html": "^1.23.0",
+    "node-sass": "^6.0.1",
+    "sanitize-html": ">=2.3.2",
     "socket.io": "^2.4.1"
   },
   "devDependencies": {
