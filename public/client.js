@@ -153,6 +153,10 @@ window.addEventListener("load", (ev) => {
   if (!mobileAndTabletCheck()) {
     $txtNombre.focus();
   }
+
+  setInterval(() => {
+    socket.emit("stay awake") //no te vayas a dormir heroku !
+  }, 28 * 60 * 1000) //28 minutos
 });
 
 window.addEventListener("resize", (ev) => {

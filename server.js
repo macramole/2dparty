@@ -301,4 +301,9 @@ io.on('connection', function (socket) {
     socket.broadcast.emit('user disconnected', socket.id)
     delete users[socket.id]
   })
+  
+  socket.on('stay awake', () => {
+    // foo, stay awake !, no te vayas a dormir heroku
+    // console.log("staying alive ah ah ah")
+  })
 })
